@@ -1,0 +1,260 @@
+[debug] [2025-11-04T01:19:58.910Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T01:19:58.912Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init
+[debug] [2025-11-04T01:19:58.912Z] CLI Version:   13.28.0
+[debug] [2025-11-04T01:19:58.913Z] Platform:      linux
+[debug] [2025-11-04T01:19:58.913Z] Node Version:  v22.21.0
+[debug] [2025-11-04T01:19:58.913Z] Time:          Tue Nov 04 2025 01:19:58 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T01:19:58.913Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T01:19:58.917Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T01:19:58.942Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-11-04T01:22:51.233Z] No OAuth tokens found
+[debug] [2025-11-04T01:22:51.234Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-11-04T01:22:51.432Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 403
+[debug] [2025-11-04T01:22:51.432Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-04T01:22:51.433Z] Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+[debug] [2025-11-04T01:22:51.452Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to list Firebase projects. See firebase-debug.log for more info.
+[debug] [2025-11-04T01:43:50.729Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T01:43:50.731Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init
+[debug] [2025-11-04T01:43:50.731Z] CLI Version:   13.28.0
+[debug] [2025-11-04T01:43:50.731Z] Platform:      linux
+[debug] [2025-11-04T01:43:50.731Z] Node Version:  v22.21.0
+[debug] [2025-11-04T01:43:50.732Z] Time:          Tue Nov 04 2025 01:43:50 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T01:43:50.732Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T01:43:50.736Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T01:43:50.765Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-11-04T01:44:51.593Z] No OAuth tokens found
+[debug] [2025-11-04T01:44:51.595Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-11-04T01:44:51.713Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 403
+[debug] [2025-11-04T01:44:51.713Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-04T01:44:51.714Z] Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+[debug] [2025-11-04T01:44:51.730Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to list Firebase projects. See firebase-debug.log for more info.
+[debug] [2025-11-04T01:51:30.240Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T01:51:30.242Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init
+[debug] [2025-11-04T01:51:30.242Z] CLI Version:   13.28.0
+[debug] [2025-11-04T01:51:30.243Z] Platform:      linux
+[debug] [2025-11-04T01:51:30.243Z] Node Version:  v22.21.0
+[debug] [2025-11-04T01:51:30.243Z] Time:          Tue Nov 04 2025 01:51:30 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T01:51:30.243Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T01:51:30.247Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T01:51:30.271Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-11-04T01:51:38.673Z] No OAuth tokens found
+[debug] [2025-11-04T01:51:38.675Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-11-04T01:51:38.854Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 403
+[debug] [2025-11-04T01:51:38.854Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-04T01:51:38.855Z] Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+[debug] [2025-11-04T01:51:38.870Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to list Firebase projects. See firebase-debug.log for more info.
+[debug] [2025-11-04T01:52:49.567Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T01:52:49.568Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init
+[debug] [2025-11-04T01:52:49.569Z] CLI Version:   13.28.0
+[debug] [2025-11-04T01:52:49.569Z] Platform:      linux
+[debug] [2025-11-04T01:52:49.569Z] Node Version:  v22.21.0
+[debug] [2025-11-04T01:52:49.569Z] Time:          Tue Nov 04 2025 01:52:49 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T01:52:49.570Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T01:52:49.574Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T01:52:49.601Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-11-04T01:54:28.358Z] No OAuth tokens found
+[debug] [2025-11-04T01:54:28.360Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-11-04T01:54:28.546Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 403
+[debug] [2025-11-04T01:54:28.546Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-04T01:54:28.547Z] Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+[debug] [2025-11-04T01:54:28.563Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects?pageSize=100 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to list Firebase projects. See firebase-debug.log for more info.
+[debug] [2025-11-04T02:02:11.948Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T02:02:11.950Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init --project idyllic-journey-47562
+[debug] [2025-11-04T02:02:11.950Z] CLI Version:   13.28.0
+[debug] [2025-11-04T02:02:11.951Z] Platform:      linux
+[debug] [2025-11-04T02:02:11.951Z] Node Version:  v22.21.0
+[debug] [2025-11-04T02:02:11.951Z] Time:          Tue Nov 04 2025 02:02:11 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T02:02:11.951Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T02:02:11.955Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T02:02:11.981Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-11-04T02:02:21.297Z] Using project from CLI flag: idyllic-journey-47562
+[debug] [2025-11-04T02:02:21.297Z] No OAuth tokens found
+[debug] [2025-11-04T02:02:21.298Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/idyllic-journey-47562 [none]
+[debug] [2025-11-04T02:02:21.559Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/idyllic-journey-47562 403
+[debug] [2025-11-04T02:02:21.559Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/idyllic-journey-47562 {"error":{"code":403,"message":"Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"service":"firebase.googleapis.com","containerInfo":"idyllic-journey-475621-j8","activationUrl":"https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8","serviceTitle":"Firebase Management API","consumer":"projects/idyllic-journey-475621-j8"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8"}]}]}}
+[debug] [2025-11-04T02:02:21.560Z] Request to https://firebase.googleapis.com/v1beta1/projects/idyllic-journey-47562 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+[debug] [2025-11-04T02:02:21.575Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/idyllic-journey-47562 had HTTP Error: 403, Firebase Management API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firebase.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to get Firebase project idyllic-journey-47562. Please make sure the project exists and your account has permission to access it.
+[debug] [2025-11-04T02:03:42.884Z] ----------------------------------------------------------------------
+[debug] [2025-11-04T02:03:42.885Z] Command:       /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/node_packages/node_modules/.bin/firebase init
+[debug] [2025-11-04T02:03:42.886Z] CLI Version:   13.28.0
+[debug] [2025-11-04T02:03:42.886Z] Platform:      linux
+[debug] [2025-11-04T02:03:42.886Z] Node Version:  v22.21.0
+[debug] [2025-11-04T02:03:42.886Z] Time:          Tue Nov 04 2025 02:03:42 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-11-04T02:03:42.886Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-04T02:03:42.890Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-04T02:03:42.915Z] Running auto auth
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/wavie3582
+
+Before we get started, keep in mind:
+
+  * You are initializing your home directory as a Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-11-04T02:06:54.038Z] No OAuth tokens found
+[debug] [2025-11-04T02:06:54.040Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-11-04T02:06:54.040Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"idyllic-journey-475621","name":"pulsemotionhub"}
+[debug] [2025-11-04T02:06:54.109Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 403
+[debug] [2025-11-04T02:06:54.109Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"error":{"code":403,"message":"Cloud Resource Manager API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"activationUrl":"https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview?project=idyllic-journey-475621-j8","containerInfo":"idyllic-journey-475621-j8","service":"cloudresourcemanager.googleapis.com","serviceTitle":"Cloud Resource Manager API","consumer":"projects/idyllic-journey-475621-j8"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Cloud Resource Manager API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview?project=idyllic-journey-475621-j8"}]}]}}
+[debug] [2025-11-04T02:06:54.123Z] FirebaseError: Request to https://cloudresourcemanager.googleapis.com/v1/projects had HTTP Error: 403, Cloud Resource Manager API has not been used in project idyllic-journey-475621-j8 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview?project=idyllic-journey-475621-j8 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.
+    at responseToError (/usr/local/node_packages/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/node_packages/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.

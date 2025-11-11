@@ -1,0 +1,16 @@
+{
+	"motd": {
+		"cloudBuildErrorAfter": 1594252800000,
+		"cloudBuildWarnAfter": 1590019200000,
+		"defaultNode10After": 1594252800000,
+		"minVersion": "3.0.5",
+		"node8DeploysDisabledAfter": 1613390400000,
+		"node8RuntimeDisabledAfter": 1615809600000,
+		"node8WarnAfter": 1600128000000,
+		"fetched": 1762213432104
+	},
+	"lastError": 1762222014375,
+	"usage": true,
+	"emulator-analytics-clientId": "a47f8c59-461f-4572-97f3-345f5192969f",
+	"analytics-uuid": "169d5f9e-c6f6-4166-af86-bb7c2198a262"
+}

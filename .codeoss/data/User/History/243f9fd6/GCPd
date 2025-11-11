@@ -1,0 +1,25 @@
+# Use the official Node.js 20 image as the base image for stability and security.
+FROM node:20-slim
+
+# Create and set the working directory for the application inside the container.
+WORKDIR /usr/src/app
+
+# Copy the package.json and package-lock.json first to leverage Docker's caching.
+# This ensures dependencies are only re-installed if package files change.
+COPY package*.json ./
+
+# Install application dependencies using 'npm ci' for clean, locked installs.
+# This uses the package-lock.json you successfully generated.
+RUN npm ci --omit=dev
+
+# Copy the rest of the application source code into the container.
+# This includes app.js and the entire 'public' directory.
+COPY . .
+
+# Cloud Run services must listen on the port defined by the PORT environment variable.
+# We expose port 8080 as this is the default for Google Cloud Run.
+EXPOSE 8080
+
+# Define the command to run the application when the container starts.
+# We use 'node app.js' as defined in your package.json "start" script.
+CMD [ "npm", "start" ]

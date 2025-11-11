@@ -1,0 +1,153 @@
+2025-11-11 16:54:08.769 [info] [main] Log level: Info
+2025-11-11 16:54:08.769 [info] [main] Validating found git in: "git"
+2025-11-11 16:54:08.769 [info] [main] Using git "2.43.0" from "git"
+2025-11-11 16:54:08.769 [info] [Model][doInitialScan] Initial repository scan started
+2025-11-11 16:54:08.769 [info] > git rev-parse --show-toplevel [9ms]
+2025-11-11 16:54:08.769 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.769 [info] > git rev-parse --show-toplevel [4ms]
+2025-11-11 16:54:08.769 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.796 [info] > git rev-parse --show-toplevel [21ms]
+2025-11-11 16:54:08.797 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.805 [info] > git rev-parse --show-toplevel [4ms]
+2025-11-11 16:54:08.805 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.821 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:54:08.821 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.827 [info] > git rev-parse --show-toplevel [1ms]
+2025-11-11 16:54:08.827 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.833 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:54:08.833 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.839 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:54:08.839 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.846 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:54:08.846 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.853 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:54:08.853 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:08.854 [info] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2025-11-11 16:54:09.511 [info] > git rev-parse --show-toplevel [5ms]
+2025-11-11 16:54:09.511 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:54:20.446 [info] > git rev-parse --show-toplevel [4ms]
+2025-11-11 16:54:20.447 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-11-11 16:55:14.761 [info] > git rev-parse --show-toplevel [2ms]
+2025-11-11 16:55:14.770 [info] > git rev-parse --git-dir --git-common-dir [2ms]
+2025-11-11 16:55:14.782 [info] [Model][openRepository] Opened repository (path): /home/wavie3582
+2025-11-11 16:55:14.782 [info] [Model][openRepository] Opened repository (real path): /home/wavie3582
+2025-11-11 16:55:14.800 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:55:14.801 [info] > git config --get commit.template [10ms]
+2025-11-11 16:55:14.802 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [3ms]
+2025-11-11 16:55:14.803 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:55:14.823 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:55:14.864 [info] > git status -z -uall [54ms]
+2025-11-11 16:55:15.634 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [694ms]
+2025-11-11 16:55:15.634 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:55:15.635 [error] [GitHistoryProvider][resolveHEADMergeBase] Failed to resolve merge base for master: Error: No such branch: master.
+2025-11-11 16:55:15.655 [info] > git config --get commit.template [25ms]
+2025-11-11 16:55:15.662 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:55:15.665 [info] > git check-ignore -v -z --stdin [12ms]
+2025-11-11 16:55:15.667 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [5ms]
+2025-11-11 16:55:15.667 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:55:15.682 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:55:15.719 [info] > git status -z -uall [46ms]
+2025-11-11 16:57:44.039 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:57:44.041 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:57:44.042 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:57:44.042 [info] > git config --get commit.template [10ms]
+2025-11-11 16:57:44.061 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:57:44.097 [info] > git status -z -uall [49ms]
+2025-11-11 16:57:45.911 [info] > git show --textconv :public/index.html [28ms]
+2025-11-11 16:57:45.911 [info] > git show --textconv HEAD:public/index.html [20ms]
+2025-11-11 16:57:45.914 [info] > git ls-files --stage -- public/index.html [14ms]
+2025-11-11 16:57:45.930 [info] > git cat-file -s a708f483efde383f8b1f0c4eddc13fad476592ef [10ms]
+2025-11-11 16:57:45.931 [info] > git ls-tree -l HEAD -- public/index.html [23ms]
+2025-11-11 16:57:45.931 [info] fatal: Not a valid object name HEAD
+2025-11-11 16:57:45.938 [info] > git hash-object -t tree /dev/null [10ms]
+2025-11-11 16:57:45.938 [warning] [GitFileSystemProvider][readFile] File not found - git:/home/wavie3582/public/index.html.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fpublic%2Findex.html%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:57:45.945 [info] > git hash-object -t tree /dev/null [8ms]
+2025-11-11 16:57:45.946 [warning] [GitFileSystemProvider][stat] File not found - git:/home/wavie3582/public/index.html.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fpublic%2Findex.html%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:57:49.190 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:57:49.192 [info] > git config --get commit.template [9ms]
+2025-11-11 16:57:49.192 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:57:49.192 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:57:49.212 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:57:49.246 [info] > git status -z -uall [47ms]
+2025-11-11 16:58:08.623 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:08.624 [info] > git config --get commit.template [11ms]
+2025-11-11 16:58:08.625 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:08.626 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:08.656 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:58:08.695 [info] > git status -z -uall [60ms]
+2025-11-11 16:58:11.319 [info] > git show --textconv :server.js [32ms]
+2025-11-11 16:58:11.319 [info] > git show --textconv HEAD:server.js [21ms]
+2025-11-11 16:58:11.319 [info] > git ls-files --stage -- server.js [12ms]
+2025-11-11 16:58:11.329 [warning] [GitFileSystemProvider][readFile] File not found - git:/home/wavie3582/server.js.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fserver.js%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:58:11.331 [info] > git ls-tree -l HEAD -- server.js [14ms]
+2025-11-11 16:58:11.331 [info] fatal: Not a valid object name HEAD
+2025-11-11 16:58:11.332 [warning] [GitFileSystemProvider][stat] File not found - git:/home/wavie3582/server.js.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fserver.js%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:58:11.333 [info] > git cat-file -s 8a5fb60f21e4f9d866c505dd90b6a4246b38a23b [5ms]
+2025-11-11 16:58:13.759 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:13.760 [info] > git config --get commit.template [9ms]
+2025-11-11 16:58:13.761 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:13.761 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:13.784 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]
+2025-11-11 16:58:13.819 [info] > git status -z -uall [51ms]
+2025-11-11 16:58:21.005 [info] > git config --get commit.template [5ms]
+2025-11-11 16:58:21.023 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:21.027 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [4ms]
+2025-11-11 16:58:21.027 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:21.063 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [1ms]
+2025-11-11 16:58:21.104 [info] > git status -z -uall [65ms]
+2025-11-11 16:58:26.167 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:26.174 [info] > git config --get commit.template [7ms]
+2025-11-11 16:58:26.175 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:26.175 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:26.194 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]
+2025-11-11 16:58:26.223 [info] > git status -z -uall [41ms]
+2025-11-11 16:58:39.290 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:39.290 [info] > git config --get commit.template [8ms]
+2025-11-11 16:58:39.291 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:39.291 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:39.312 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:58:39.338 [info] > git status -z -uall [40ms]
+2025-11-11 16:58:44.400 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:44.400 [info] > git config --get commit.template [8ms]
+2025-11-11 16:58:44.401 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:44.401 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:44.420 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [1ms]
+2025-11-11 16:58:44.449 [info] > git status -z -uall [41ms]
+2025-11-11 16:58:46.396 [info] > git show --textconv :public/index.html [24ms]
+2025-11-11 16:58:46.396 [info] > git show --textconv HEAD:public/index.html [17ms]
+2025-11-11 16:58:46.396 [info] > git ls-files --stage -- public/index.html [10ms]
+2025-11-11 16:58:46.404 [warning] [GitFileSystemProvider][readFile] File not found - git:/home/wavie3582/public/index.html.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fpublic%2Findex.html%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:58:46.405 [info] > git cat-file -s a708f483efde383f8b1f0c4eddc13fad476592ef [2ms]
+2025-11-11 16:58:46.406 [info] > git ls-tree -l HEAD -- public/index.html [12ms]
+2025-11-11 16:58:46.406 [info] fatal: Not a valid object name HEAD
+2025-11-11 16:58:46.406 [warning] [GitFileSystemProvider][stat] File not found - git:/home/wavie3582/public/index.html.git?%7B%22path%22%3A%22%2Fhome%2Fwavie3582%2Fpublic%2Findex.html%22%2C%22ref%22%3A%22HEAD%22%7D
+2025-11-11 16:58:49.499 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:58:49.500 [info] > git config --get commit.template [9ms]
+2025-11-11 16:58:49.501 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 16:58:49.501 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:58:49.520 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:58:49.550 [info] > git status -z -uall [42ms]
+2025-11-11 16:59:36.312 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 16:59:36.313 [info] > git config --get commit.template [8ms]
+2025-11-11 16:59:36.314 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [3ms]
+2025-11-11 16:59:36.314 [warning] [Git][getBranch] No such branch: master
+2025-11-11 16:59:36.336 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 16:59:36.364 [info] > git status -z -uall [43ms]
+2025-11-11 17:00:04.078 [info] [Git][getRemotes] No remotes found in the git config file
+2025-11-11 17:00:04.079 [info] > git config --get commit.template [9ms]
+2025-11-11 17:00:04.079 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-11-11 17:00:04.080 [warning] [Git][getBranch] No such branch: master
+2025-11-11 17:00:04.101 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-11-11 17:00:04.131 [info] > git status -z -uall [44ms]

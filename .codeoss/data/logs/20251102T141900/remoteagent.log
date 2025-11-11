@@ -1,0 +1,10 @@
+2025-11-02 14:19:00.187 [info] 
+
+
+
+
+2025-11-02 14:19:00.187 [info] Extension host agent started.
+2025-11-02 14:19:07.390 [info] [127.0.0.1][9cf71122][ManagementConnection] New connection established.
+2025-11-02 14:19:07.419 [info] [127.0.0.1][56544434][ExtensionHostConnection] New connection established.
+2025-11-02 14:19:08.144 [info] [127.0.0.1][56544434][ExtensionHostConnection] <1250> Launched Extension Host Process.
+2025-11-02 15:07:35.895 [info] [127.0.0.1][9cf71122][ManagementConnection] The client has disconnected, will wait for reconnection 3h before disposing...

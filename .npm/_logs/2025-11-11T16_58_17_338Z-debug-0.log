@@ -1,0 +1,70 @@
+0 verbose cli /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/nvm/versions/node/v22.21.0/bin/npm
+1 info using npm@11.6.2
+2 info using node@v22.21.0
+3 silly config load:file:/usr/local/nvm/versions/node/v22.21.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/wavie3582/.cache/typescript/5.8/.npmrc
+5 silly config load:file:/home/wavie3582/.npmrc
+6 silly config load:file:/usr/local/nvm/versions/node/v22.21.0/etc/npmrc
+7 verbose title npm install @types/express@ts5.8
+8 verbose argv "install" "--ignore-scripts" "@types/express@ts5.8" "--save-dev" "--user-agent" "typesInstaller/5.8.3"
+9 verbose logfile logs-max:10 dir:/home/wavie3582/.npm/_logs/2025-11-11T16_58_17_338Z-
+10 verbose logfile /home/wavie3582/.npm/_logs/2025-11-11T16_58_17_338Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+14 silly packumentCache corgi:https://registry.npmjs.org/@types%2fexpress cache-miss
+15 http fetch GET 200 https://registry.npmjs.org/@types%2fexpress 239ms (cache revalidated)
+16 silly packumentCache corgi:https://registry.npmjs.org/@types%2fexpress set size:53680 disposed:false
+17 silly idealTree buildDeps
+18 silly fetch manifest @types/express@5.0.5
+19 silly packumentCache full:https://registry.npmjs.org/@types%2fexpress cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/@types%2fexpress 92ms (cache revalidated)
+21 silly packumentCache full:https://registry.npmjs.org/@types%2fexpress set size:109503 disposed:false
+22 silly placeDep ROOT @types/express@5.0.5 REPLACE for:  want: 5.0.5
+23 silly reify moves {}
+24 silly audit bulk request {
+24 silly audit   '@types/body-parser': [ '1.19.6' ],
+24 silly audit   '@types/connect': [ '3.4.38' ],
+24 silly audit   '@types/express-serve-static-core': [ '5.1.0' ],
+24 silly audit   '@types/http-errors': [ '2.0.5' ],
+24 silly audit   '@types/mime': [ '1.3.5' ],
+24 silly audit   '@types/node': [ '24.9.1' ],
+24 silly audit   '@types/node-fetch': [ '2.6.13' ],
+24 silly audit   '@types/qs': [ '6.14.0' ],
+24 silly audit   '@types/range-parser': [ '1.2.7' ],
+24 silly audit   '@types/react': [ '19.2.2' ],
+24 silly audit   '@types/send': [ '1.2.1', '0.17.6' ],
+24 silly audit   '@types/serve-static': [ '1.15.10' ],
+24 silly audit   asynckit: [ '0.4.0' ],
+24 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+24 silly audit   'combined-stream': [ '1.0.8' ],
+24 silly audit   csstype: [ '3.1.3' ],
+24 silly audit   'delayed-stream': [ '1.0.0' ],
+24 silly audit   'dunder-proto': [ '1.0.1' ],
+24 silly audit   'es-define-property': [ '1.0.1' ],
+24 silly audit   'es-errors': [ '1.3.0' ],
+24 silly audit   'es-object-atoms': [ '1.1.1' ],
+24 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+24 silly audit   'form-data': [ '4.0.4' ],
+24 silly audit   'function-bind': [ '1.1.2' ],
+24 silly audit   'get-intrinsic': [ '1.3.0' ],
+24 silly audit   'get-proto': [ '1.0.1' ],
+24 silly audit   gopd: [ '1.2.0' ],
+24 silly audit   'has-symbols': [ '1.1.0' ],
+24 silly audit   'has-tostringtag': [ '1.0.2' ],
+24 silly audit   hasown: [ '2.0.2' ],
+24 silly audit   'math-intrinsics': [ '1.1.0' ],
+24 silly audit   'mime-db': [ '1.52.0' ],
+24 silly audit   'mime-types': [ '2.1.35' ],
+24 silly audit   'types-registry': [ '0.1.746' ],
+24 silly audit   'undici-types': [ '7.16.0' ],
+24 silly audit   '@types/express': [ '5.0.5' ]
+24 silly audit }
+25 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 127ms
+26 silly audit report {}
+27 verbose cwd /home/wavie3582/.cache/typescript/5.8
+28 verbose os Linux 6.6.111+
+29 verbose node v22.21.0
+30 verbose npm  v11.6.2
+31 verbose exit 0
+32 info ok

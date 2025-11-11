@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseMotionHub - AI Video Generator</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1e40af', // Tailwind blue-700 equivalent
+                        'secondary-gray': '#f3f4f6', // Tailwind gray-100 equivalent
+                    },
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            },
+        }
+    </script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Ensures the icon sizing is correct */
+        .lucide {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        .lucide-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+        /* Prevents horizontal scrolling caused by responsive elements */
+        body {
+            overflow-x: hidden;
+        }
+        /* Custom spinner for loading states */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #1e40af; /* Primary blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    
+    <!-- Sticky Navigation Header -->    
+    <header class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-primary-blue flex items-center">
+                <i data-lucide="zap" class="mr-2 h-6 w-6"></i>
+                PulseMotionHub
+            </a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#tool" class="text-gray-600 hover:text-primary-blue font-medium transition duration-150">Generator</a>
+                <a href="#pricing" class="text-gray-600 hover:text-primary-blue font-medium transition duration-150">Pricing</a>
+                <a href="#contact" class="text-gray-600 hover:text-primary-blue font-medium transition duration-150">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button id="signInButton" onclick="openAuthModal()" class="px-4 py-2 text-sm font-semibold text-white bg-primary-blue rounded-lg hover:bg-blue-800 transition duration-150 shadow-md">
+                    Sign In / Sign Up
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->    
+    <main class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Tool Section -->            
+            <section id="tool" class="bg-white p-6 sm:p-10 rounded-xl shadow-2xl space-y-8">
+                <h1 class="text-4xl font-extrabold text-gray-900 text-center">AI Video Generation Studio</h1>
+                <p class="text-center text-gray-500 max-w-2xl mx-auto">Transform static images into cinematic 5-second video scripts using the power of Gemini AI. Your key is securely handled by our Cloud Run backend.</p>
+                
+                <!-- Firebase-backed Usage Counter and Status -->
+                <div id="usageCounterContainer" class="text-center text-sm font-medium text-primary-blue p-3 border border-gray-200 rounded-lg flex justify-center items-center space-x-4">
+                    <span id="authStatusText" class="font-semibold text-gray-700">Loading user status...</span>
+                    <span id="generationCounter" class="text-gray-500"></span>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Input Section -->                    
+                    <div class="lg:col-span-1 space-y-6">
+                        
+                        <!-- 1. Image Upload -->                        
+                        <div class="p-5 border border-gray-200 rounded-lg bg-gray-50">
+                            <label for="imageUpload" class="block text-lg font-semibold text-gray-700 mb-2 flex items-center">
+                                <i data-lucide="image" class="mr-2 h-5 w-5"></i> 1. Upload Seed Image
+                            </label>
+                            <input type="file" id="imageUpload" accept="image/jpeg, image/png" class="w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-lg file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-primary-blue/10 file:text-primary-blue
+                                hover:file:bg-primary-blue/20 file:cursor-pointer"
+                                onchange="handleImageChange(event)"
+                                required>
+                            <p id="imageFileName" class="mt-2 text-xs text-gray-500"></p>
+                        </div>
+                        
+                        <!-- 2. Motion Prompt -->                        
+                        <div class="p-5 border border-gray-200 rounded-lg bg-gray-50">
+                            <label for="motionPrompt" class="block text-lg font-semibold text-gray-700 mb-2 flex items-center">
+                                <i data-lucide="move" class="mr-2 h-5 w-5"></i> 2. Describe the Motion & Style
+                            </label>
+                            <textarea id="motionPrompt" rows="4" placeholder="E.g., A slow cinematic zoom out reveals a vast, misty mountain range at sunset, in a moody, hyper-realistic style."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue resize-none shadow-inner bg-white text-gray-800"
+                                required></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Output Section -->                    
+                    <div class="lg:col-span-2 space-y-6">
+                        <button id="generateButton" onclick="handleGenerationAttempt()"
+                            class="w-full py-3 px-6 text-lg font-bold text-white bg-primary-blue rounded-xl hover:bg-blue-800 transition duration-300 ease-in-out shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center">
+                            <i data-lucide="sparkles" class="mr-3 h-6 w-6"></i>
+                            Generate Video Script (5 Seconds)
+                        </button>
+                        
+                        <!-- Loading Indicator -->                        
+                        <div id="loadingIndicator" class="text-center py-4 hidden">
+                            <!-- JS will inject spinner here -->
+                        </div>
+                        
+                        <!-- Output Display -->                        
+                        <div id="outputDisplay" class="border border-gray-300 rounded-xl bg-gray-50 p-6 shadow-inner space-y-4">
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                <i data-lucide="film" class="mr-2 h-5 w-5"></i> Generated Output
+                            </h2>                                                            
+                            <div class="lg:flex lg:space-x-4 space-y-4 lg:space-y-0">
+                                
+                                <!-- Image & Mockup -->                                
+                                <div id="videoPlaceholder" class="lg:w-1/2 flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-gray-200 min-h-[192px]">
+                                    <p id="imagePlaceholderText" class="text-gray-500 text-center italic">Upload an image and generate a script to see the mockup.</p>
+                                    <img id="uploadedImagePreview" class="hidden w-full h-auto rounded-lg shadow-lg border-2 border-primary-blue/50" alt="Uploaded Image Preview">
+                                </div>
+                                
+                                <!-- Script Text -->                                
+                                <div id="descriptionCard" class="lg:w-1/2 hidden">
+                                    <p class="text-sm font-semibold text-gray-700 mb-2">Cinematic Script:</p>
+                                    <div id="scriptOutput" class="text-gray-600 italic bg-white p-4 rounded-lg border border-gray-200 min-h-[120px] flex items-center justify-center text-left relative whitespace-pre-wrap">
+                                        Your detailed 5-second video script will appear here after generation.
+                                    </div>
+                                    <button id="copyScriptButton" onclick="copyScriptToClipboard()" class="mt-3 px-3 py-1 text-xs font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-150 shadow-md hidden">
+                                        <i data-lucide="copy" class="mr-1 h-3 w-3 inline"></i> Copy Script
+                                    </button>
+                                </div>
+                            </div>
+                            <p id="statusMessage" class="text-center text-sm text-red-500"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <hr class="max-w-4xl mx-auto my-16 border-gray-300">
+
+            <!-- Pricing Section -->            
+            <section id="pricing" class="py-20">
+                <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-4">Pricing Plans</h2>
+                <p class="text-center text-gray-500 max-w-xl mx-auto mb-12">Start free, scale up, and unlock unlimited high-fidelity AI motion generation.</p>                                        
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    
+                    <!-- Free Tier -->                    
+                    <div class="flex flex-col bg-white border-2 border-primary-blue rounded-xl shadow-xl p-8 transition-transform hover:scale-[1.02] duration-300">
+                        <h3 class="text-2xl font-bold text-primary-blue mb-2">Explorer</h3>
+                        <p class="text-sm text-gray-500 mb-6">Start generating immediately.</p>
+                        <div class="text-4xl font-extrabold mb-1">Free</div>
+                        <p class="text-sm text-gray-500 mb-6">Always Free</p>                                    
+                        <ul class="space-y-3 flex-grow mb-8 text-gray-700">
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                <strong>3 Generations / day</strong>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                Standard Cinematic Scripting
+                            </li>
+                            <li class="flex items-center text-gray-400">
+                                <i data-lucide="x" class="h-5 w-5 text-red-500 mr-2"></i>
+                                Priority Processing
+                            </li>
+                        </ul>                                    
+                        <button onclick="openAuthModal()" class="w-full py-3 text-white font-semibold bg-primary-blue rounded-lg shadow-md hover:bg-blue-800 transition duration-150">
+                            Start Free
+                        </button>
+                    </div>
+                    
+                    <!-- Pro Tier -->                    
+                    <div class="flex flex-col bg-white border-2 border-gray-300 rounded-xl shadow-xl p-8 transition-transform hover:scale-[1.02] duration-300">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Creator Pro</h3>
+                        <p class="text-sm text-gray-500 mb-6">For freelancers and high-volume content.</p>
+                        <div class="text-4xl font-extrabold mb-1">$29</div>
+                        <p class="text-sm text-gray-500 mb-6">per month</p>                                    
+                        <ul class="space-y-3 flex-grow mb-8 text-gray-700">
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                **Unlimited Generations** </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                Access to Advanced AI Models
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                Priority Processing
+                            </li>
+                        </ul>                                    
+                        <button class="w-full py-3 text-white font-semibold bg-gray-800 rounded-lg shadow-md hover:bg-black transition duration-150">
+                            Get Started
+                        </button>
+                    </div>
+                    
+                    <!-- Enterprise Tier -->                    
+                    <div class="flex flex-col bg-white border-2 border-gray-300 rounded-xl shadow-xl p-8 transition-transform hover:scale-[1.02] duration-300">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                        <p class="text-sm text-gray-500 mb-6">For agencies and platform integration.</p>
+                        <div class="text-4xl font-extrabold mb-1">Custom</div>
+                        <p class="text-sm text-gray-500 mb-6">Contact us for pricing</p>                                    
+                        <ul class="space-y-3 flex-grow mb-8 text-gray-700">
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                Dedicated API Access
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                Custom Usage Limits & Billing
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check" class="h-5 w-5 text-green-500 mr-2"></i>
+                                24/7 Priority Support
+                            </li>
+                        </ul>                                    
+                        <button class="w-full py-3 text-primary-blue font-semibold border-2 border-primary-blue rounded-lg shadow-md hover:bg-primary-blue hover:text-white transition duration-150">
+                            Contact Sales
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->    
+    <footer id="contact" class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-6 mb-6">
+                <a href="#" class="text-xl font-bold text-primary-blue flex items-center mb-4 md:mb-0">
+                    <i data-lucide="zap" class="mr-2 h-5 w-5 text-white"></i>
+                    PulseMotionHub
+                </a>
+                <div class="flex space-x-6 text-sm">
+                    <a href="#" class="hover:text-primary-blue transition duration-150">Privacy Policy</a>
+                    <a href="#" class="hover:text-primary-blue transition duration-150">Terms of Service</a>
+                    <a href="#" class="hover:text-primary-blue transition duration-150">FAQ</a>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-400">
+                &copy; <span id="currentYear"></span> PulseMotionHub. All rights reserved. Built with Gemini AI.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL FOR SIGN IN/SIGN UP -->
+    <div id="authModal" class="hidden fixed inset-0 flex items-center justify-center p-4 z-50 bg-gray-900/80 backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full border border-gray-300">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                   <i data-lucide="lock" class="lucide-sm mr-2"></i> Account Access
+            </h2>
+            <div id="authMessage" class="text-sm text-red-500 mb-3 hidden"></div>
+
+            <button onclick="signInAnonymously()" class="w-full py-3 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-800 transition shadow-md">
+                Continue as Guest (Limited)
+            </button>
+            <p class="text-center text-xs text-gray-500 mt-4">
+                To manage subscriptions or save content, please sign up using a full method later.
+            </p>
+
+            <button onclick="closeAuthModal()" class="w-full mt-4 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Enable Firestore Debug logging
+        setLogLevel('debug');
+
+        // --- GLOBAL CONSTANTS ---
+        const MAX_FREE_GENERATIONS = 3;
+        // Corrected API URL for the Image-to-Text model proxy in the Canvas environment
+        const API_MODEL_URL = '/api/models/gemini-2.5-flash-preview-image:generateContent'; 
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // --- FIREBASE INITIALIZATION ---
+        let db;
+        let auth;
+        
+        if (Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } else {
+            console.error("Firebase configuration is missing or invalid. Cannot initialize Firebase services.");
+        }
+
+        // --- GLOBAL STATE ---
+        let userId = null;
+        let userGenerationsToday = 0;
+        let isAuthReady = false;
+        let isProUser = false; // NEW: Assume false until subscription check is implemented
+        let uploadedFile = null;
+        let uploadedFileUrl = null;
+
+        // --- UI ELEMENTS (Global scope for module) ---
+        let generateBtn;
+        let videoPromptInput;
+        let videoDescriptionEl;
+        let authButton;
+        let authModal;
+        let authStatusText;
+        let generationCounter;
+        let authMessage;
+        let copyScriptButton;
+        let statusMessage;
+        let imagePlaceholderText;
+        let uploadedImagePreview;
+        let videoPlaceholder;
+        let headerSignInButton;
+
+        // --- FIREBASE UTILITIES ---
+
+        // FIX: Corrected to use the standard private path structure including 'users' subcollection.
+        const getUserStatsDocRef = (uid) => doc(db, `artifacts/${appId}/users/${uid}/records/${getTodayKey()}`); 
+        
+        function getTodayKey() {
+            // Returns YYYY-MM-DD
+            return new Date().toISOString().split('T')[0];
+        }
+
+        async function initializeAuthentication() {
+            if (!auth) {
+                if (authStatusText) authStatusText.textContent = 'Firebase Auth Service Error.';
+                return;
+            }
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch(error) {
+                console.error("Firebase Sign-in Failed:", error);
+                if (authStatusText) authStatusText.textContent = 'Auth Failed. Limited functionality.';
+            }
+        }
+
+        // Placeholder function for future Pro status check
+        const checkProStatus = async (uid) => {
+            // Mock check: users whose ID starts with 'pro-' are considered Pro users.
+            return uid.startsWith('pro-'); 
+        };
+
+
+        const setupLimitListener = () => {
+            if (!userId || !db) return;
+            
+            // Check Pro status once on setup
+            checkProStatus(userId).then(status => {
+                isProUser = status;
+                updateStatusDisplay();
+                updateButtonState();
+            });
+
+            try {
+                const limitDocRef = getUserStatsDocRef(userId);
+
+                onSnapshot(limitDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        userGenerationsToday = docSnap.data().count || 0;
+                    } else {
+                        // If document doesn't exist, create it with count 0 
+                         setDoc(limitDocRef, { 
+                            count: 0, 
+                            last_updated: new Date().toISOString(),
+                            created_at: new Date().toISOString()
+                         }, { merge: true }).catch(e => console.error("Error creating initial limit doc:", e));
+                        userGenerationsToday = 0;
+                    }
+                    updateStatusDisplay();
+                    updateButtonState();
+                }, (error) => {
+                    console.error("Firestore Listener Error:", error);
+                    userGenerationsToday = 0; 
+                    updateStatusDisplay();
+                    updateButtonState();
+                });
+            } catch (e) {
+                console.error("Error setting up onSnapshot listener:", e);
+            }
+        };
+
+        const incrementGenerationCount = async () => {
+            if (!userId || !db || isProUser) return true; // Bypass increment for Pro users
+
+            const limitDocRef = getUserStatsDocRef(userId);
+
+            try {
+                // Fetch the latest count directly for atomic update check
+                const docSnap = await getDoc(limitDocRef);
+                const currentCount = docSnap.exists() ? docSnap.data().count || 0 : 0;
+
+                if (currentCount < MAX_FREE_GENERATIONS) {
+                    await setDoc(limitDocRef, {
+                        count: currentCount + 1,
+                        last_updated: new Date().toISOString(),
+                        created_at: docSnap.exists() ? docSnap.data().created_at : new Date().toISOString()
+                    }, { merge: true });
+                }
+                return true;
+            } catch (e) {
+                console.error("Error updating generation count:", e);
+                return false;
+            }
+        };
+
+        // --- AUTH STATE CHANGE LISTENER (Runs immediately after script execution) ---
+        if (typeof onAuthStateChanged !== 'undefined' && auth) {
+            onAuthStateChanged(auth, async (user) => {
+                if (!headerSignInButton) return; 
+                
+                if (user) {
+                    userId = user.uid;
+                    // FIX: Re-sign in anonymously after sign out to maintain a working session
+                    window.signOut = async () => {
+                        await signOut(auth);
+                        await signInAnonymously(auth); 
+                    };
+                    headerSignInButton.textContent = 'Sign Out';
+                    headerSignInButton.onclick = window.signOut;
+                    
+                    isProUser = await checkProStatus(userId);
+                    setupLimitListener(); 
+                    if (authModal) authModal.classList.add('hidden');
+
+                } else {
+                    userId = null;
+                    userGenerationsToday = 0;
+                    isProUser = false;
+                    headerSignInButton.textContent = 'Sign In / Sign Up';
+                    headerSignInButton.onclick = window.openAuthModal;
+                    updateStatusDisplay();
+                    updateButtonState();
+                }
+                isAuthReady = true;
+                lucide.createIcons();
+            });
+        }
+
+
+        // --- UI LOGIC ---
+
+        function openAuthModal() { 
+            if (authModal) authModal.classList.remove('hidden'); 
+        }
+        function closeAuthModal() { 
+            if (authModal) {
+                authModal.classList.add('hidden'); 
+                if (authMessage) authMessage.classList.add('hidden'); 
+            }
+        }
+
+        function updateStatusDisplay() {
+            if (!isAuthReady || !authStatusText || !generationCounter) return;
+
+            const userStatus = auth.currentUser;
+            // FIX: Show complete UID for multi-user visibility/debugging
+            const uidDisplay = userStatus ? 
+                (userStatus.isAnonymous ? 
+                    'Guest (Free)' : 
+                    `User ID: ${userStatus.uid}`
+                ) : 'Signed Out';
+
+            let limitText;
+            if (isProUser) {
+                limitText = `Limit: **Unlimited** (Creator Pro)`;
+            } else {
+                const remaining = MAX_FREE_GENERATIONS - userGenerationsToday;
+                limitText = `Remaining: **${Math.max(0, remaining)}** / ${MAX_FREE_GENERATIONS} today`;
+            }
+
+            generationCounter.innerHTML = limitText;
+            authStatusText.textContent = `Status: ${uidDisplay}`;
+
+            if (!isProUser && userGenerationsToday >= MAX_FREE_GENERATIONS) {
+                authStatusText.classList.add('text-red-500');
+                authStatusText.classList.remove('text-gray-700');
+            } else {
+                authStatusText.classList.remove('text-red-500');
+                authStatusText.classList.add('text-gray-700');
+            }
+        }
+
+        function handleImageChange(event) {
+            uploadedFile = event.target.files[0];
+            
+            if (uploadedFile) {
+                // Clean up previous URL object to save memory
+                if (uploadedFileUrl) { URL.revokeObjectURL(uploadedFileUrl); } 
+                uploadedFileUrl = URL.createObjectURL(uploadedFile);
+
+                // Update videoPlaceholder content
+                if (videoPlaceholder) {
+                    videoPlaceholder.innerHTML = `
+                        <img id="uploadedImagePreview" src="${uploadedFileUrl}" class="w-full h-auto rounded-lg shadow-lg border-2 border-primary-blue/50 max-h-72 object-contain" alt="Uploaded Image Preview">
+                    `;
+                }
+
+            } else {
+                // Reset placeholder if no file is selected
+                if (videoPlaceholder) videoPlaceholder.innerHTML = `<p id="imagePlaceholderText" class="text-gray-500 text-center italic">Upload an image and generate a script to see the mockup.</p>`;
+
+                if (uploadedFileUrl) { URL.revokeObjectURL(uploadedFileUrl); uploadedFileUrl = null; }
+            }
+            if(statusMessage) statusMessage.textContent = '';
+            updateButtonState();
+        }
+
+        window.handleImageChange = handleImageChange;
+
+        function updateButtonState() {
+            if (!generateBtn || !videoPromptInput) return;
+            const prompt = videoPromptInput.value.trim() || '';
+            const file = uploadedFile;
+            
+            // Check for Free Tier limit OR if all inputs are ready
+            const limitReached = !isProUser && (userGenerationsToday >= MAX_FREE_GENERATIONS);
+            const inputsReady = isAuthReady && userId && prompt && file;
+            
+            const isDisabled = limitReached || !inputsReady;
+            generateBtn.disabled = isDisabled;
+
+            if (!isAuthReady || !userId) {
+                 generateBtn.innerHTML = 'Sign In to Generate';
+            } else if (limitReached) {
+                 generateBtn.innerHTML = 'Limit Reached (Upgrade)';
+            } else if (!prompt || !file) {
+                 generateBtn.innerHTML = 'Enter Prompt & Upload Image';
+            } else {
+                 generateBtn.innerHTML = '<i data-lucide="sparkles" class="mr-3 h-6 w-6"></i> Generate Video Script (5 Seconds)';
+            }
+             lucide.createIcons();
+        }
+
+        if (videoPromptInput) videoPromptInput.addEventListener('input', updateButtonState);
+
+        function setLoading(isLoading) {
+            if (!generateBtn) return;
+
+            generateBtn.disabled = isLoading;
+            
+            document.getElementById('loadingIndicator')?.classList.toggle('hidden', !isLoading);
+            
+            if (isLoading) {
+                generateBtn.innerHTML = '<div class="spinner"></div>';
+                generateBtn.classList.add('pointer-events-none');
+                if (statusMessage) statusMessage.textContent = 'Processing request securely...';
+                if (videoDescriptionEl) {
+                    videoDescriptionEl.textContent = 'AI is crafting your cinematic vision...';
+                    videoDescriptionEl.classList.add('italic');
+                }
+                if (copyScriptButton) copyScriptButton.classList.add('hidden');
+
+                // Update Loading Indicator with proper spinner and text
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <svg class="animate-spin h-8 w-8 text-primary-blue mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-2 text-primary-blue font-semibold">Generating Cinematic Script...</p>
+                `;
+            } else {
+                generateBtn.classList.remove('pointer-events-none');
+            }
+        }
+
+        function showResult(description, prompt) {
+            const descriptionText = `*Source Image:* ${uploadedFile.name}\n*User Prompt:* "${prompt}"\n\n---\n*5-Second Cinematic Script (Generated Motion):*\n\n${description}`;
+
+            if (videoDescriptionEl) {
+                videoDescriptionEl.textContent = descriptionText;
+                videoDescriptionEl.classList.remove('italic');
+            }
+            
+            const descriptionCard = document.getElementById('descriptionCard');
+            if(descriptionCard) descriptionCard.classList.remove('hidden');
+
+            if (copyScriptButton) copyScriptButton.classList.remove('hidden');
+
+            // Update Mockup to show uploaded image + mockup text
+            if (videoPlaceholder && uploadedFileUrl) {
+                videoPlaceholder.innerHTML = `
+                    <img id="uploadedImagePreview" src="${uploadedFileUrl}" class="w-full h-auto rounded-lg shadow-lg border-2 border-primary-blue/50 max-h-72 object-contain" alt="Uploaded Image Preview">
+                    <div id="videoMockup" class="w-full mt-4 p-4 bg-primary-blue/10 rounded-lg shadow-inner text-primary-blue text-center font-bold text-sm flex items-center justify-center border border-primary-blue">
+                        <i data-lucide="monitor-play" class="mr-2 h-5 w-5"></i> AI VIDEO MOCKUP READY
+                    </div>
+                `;
+            }
+            
+            if (statusMessage) statusMessage.textContent = 'Generation complete! Review the cinematic script below.';
+            lucide.createIcons();
+        }
+
+        // --- Main Logic (API Call) ---
+
+        async function fetchWithRetry(url, options, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    // 429 is Too Many Requests (rate limiting). Retry in this case.
+                    if (response.status !== 429) return response; 
+                    if (i < retries - 1) {
+                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                } catch (error) {
+                    // For network errors, retry if not the last attempt
+                    if (i === retries - 1) throw error; 
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            throw new Error(`Failed after ${retries} attempts.`);
+        }
+
+        async function generateVideo() {
+            const userPrompt = videoPromptInput?.value.trim() || '';
+            const apiUrl = API_MODEL_URL;
+
+            if (!userPrompt || !uploadedFile) return false;
+
+            setLoading(true);
+
+            let base64Image = null;
+            if (uploadedFile) {
+                try {
+                    base64Image = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.onerror = error => reject(error);
+                        reader.readAsDataURL(uploadedFile);
+                    });
+                } catch (e) {
+                    if (statusMessage) statusMessage.textContent = 'Error reading image file for processing.';
+                    setLoading(false);
+                    return false;
+                }
+            }
+            
+            // System instruction for the Gemini model
+            const systemPrompt = "You are an expert cinematic director. Given an image and a user's desired motion, write a detailed, visually rich 5-second video script (around 50 words maximum) focusing on camera movement (like Dolly, Zoom, Tilt, Pan) and emotional tone, suitable for a text-to-video AI model.";
+            
+            const fullPrompt = `The source image describes a scene. The user wants the following motion and style applied: ${userPrompt}. Based on the image content and this motion request, write the 5-second cinematic script.`;
+            
+            // FIX: Construct the correct payload structure for the Gemini Vision API
+            const payload = {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [
+                            { text: fullPrompt },
+                            {
+                                inlineData: {
+                                    mimeType: uploadedFile.type,
+                                    data: base64Image
+                                }
+                            }
+                        ]
+                    }
+                ],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload) // FIX: Use the Gemini payload
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error.' }));
+                    throw new Error(`API Error: ${errorData.message || response.statusText}`);
+                }
+
+                const result = await response.json();
+                // FIX: Correctly parse the Gemini response structure
+                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text; 
+
+                if (generatedText) {
+                    showResult(generatedText, userPrompt);
+                    return true;
+                } else {
+                    const errorDetail = result.error?.message || 'Received an empty script from the AI.';
+                    if (statusMessage) statusMessage.textContent = 'Generation Failed: ' + errorDetail;
+                    if (videoPlaceholder) videoPlaceholder.innerHTML = `<p class="text-red-500 p-4">Error generating script: ${errorDetail}</p>`;
+                    return false;
+                }
+
+            } catch (error) {
+                console.error("Generation API Failed:", error);
+                if (statusMessage) statusMessage.textContent = `A network or server error occurred: ${error.message}`;
+                if (videoPlaceholder) videoPlaceholder.innerHTML = `<p class="text-red-500 p-4">Error communicating with server: ${error.message}</p>`;
+                return false;
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // --- EXPOSE GLOBAL FUNCTIONS ---
+        window.signInAnonymously = async function() {
+            if (!auth) return;
+            try {
+                await signInAnonymously(auth);
+                closeAuthModal();
+            } catch (error) {
+                if (authMessage) {
+                    authMessage.textContent = `Sign in failed: ${error.message}`;
+                    authMessage.classList.remove('hidden');
+                }
+                console.error("Anonymous Sign-in Error:", error);
+            }
+        };
+        window.openAuthModal = openAuthModal;
+        window.closeAuthModal = closeAuthModal;
+
+        window.handleGenerationAttempt = async function() {
+            if (!userId) {
+                if (statusMessage) statusMessage.textContent = 'Please sign in to start generating.';
+                openAuthModal();
+                return;
+            }
+            
+            // Check usage limit ONLY if the user is NOT a Pro user
+            if (!isProUser && userGenerationsToday >= MAX_FREE_GENERATIONS) {
+                if (statusMessage) statusMessage.textContent = `Daily limit of ${MAX_FREE_GENERATIONS} generations reached. Please upgrade to Pro for unlimited access.`;
+                return;
+            }
+
+            const success = await generateVideo();
+
+            if (success && !isProUser) {
+                 await incrementGenerationCount(); 
+            }
+        };
+
+        window.copyScriptToClipboard = () => {
+            const textToCopy = videoDescriptionEl?.textContent || '';
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy'); 
+                const copyBtn = document.getElementById('copyScriptButton');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = `<i data-lucide="check" class="mr-1 h-3 w-3 inline"></i> Copied!`;
+                lucide.createIcons();
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 1500);
+            } catch (err) {
+                console.error('Copy failed:', err);
+                if (statusMessage) statusMessage.textContent = 'Failed to copy script to clipboard.';
+            }
+            document.body.removeChild(tempTextArea);
+        };
+
+        // --- INITIALIZATION ---
+        
+        window.onload = async () => {
+            // 1. Map all DOM elements (Guaranteed to be available here)
+            generateBtn = document.getElementById('generateButton');
+            videoPromptInput = document.getElementById('motionPrompt');
+            videoDescriptionEl = document.getElementById('scriptOutput');
+            authButton = document.getElementById('authButton');
+            authModal = document.getElementById('authModal');
+            authStatusText = document.getElementById('authStatusText');
+            generationCounter = document.getElementById('generationCounter');
+            authMessage = document.getElementById('authMessage');
+            copyScriptButton = document.getElementById('copyScriptButton');
+            statusMessage = document.getElementById('statusMessage');
+            // imagePlaceholderText and uploadedImagePreview are now dynamically handled in videoPlaceholder
+            videoPlaceholder = document.getElementById('videoPlaceholder'); 
+            headerSignInButton = document.getElementById('signInButton'); // The button in the header
+            
+            // 2. Initial Setup
+            if (document.getElementById('currentYear')) {
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
+            }
+            if (videoPromptInput) videoPromptInput.addEventListener('input', updateButtonState);
+
+            // 3. Start Authentication flow (which triggers the onAuthStateChanged listener)
+            await initializeAuthentication();
+            
+            // 4. Update UI and Icons
+            updateButtonState();
+            lucide.createIcons();
+        };
+
+    </script>
+</body>
+</html>
