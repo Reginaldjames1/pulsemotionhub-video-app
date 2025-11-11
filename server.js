@@ -62,8 +62,10 @@ app.post('/api/generate-video', async (req, res) => {
         const apiResponse = await fetch("https://api.stability.ai/v2beta/generation/image-to-video/submit", {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${STABILITY_API_KEY}`,
+                // Ensure the form data boundary header is included first
                 ...formData.getHeaders(), 
+                // Then add the Authorization header
+                'Authorization': `Bearer ${STABILITY_API_KEY}`,
             },
             body: formData,
             signal: AbortSignal.timeout(30000) 
