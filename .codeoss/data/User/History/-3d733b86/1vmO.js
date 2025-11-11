@@ -1,4 +1,16 @@
-// Node.js Backend Proxy for PulseMotionHub (VIDEO GENERATION LOGIC)
+if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    } else {
+        res.status(404).json({ error: 'API endpoint not found.' });
+    }
+});
+
+// CRITICAL: Express server listening command for Render
+app.listen(PORT, '0.0.0.0', () => { 
+    console.log(`Server listening on port ${PORT}`);
+});
+
+export default app;// Node.js Backend Proxy for PulseMotionHub (VIDEO GENERATION LOGIC)
 // Runs securely on Render.
 
 import express from 'express';
@@ -29,6 +41,10 @@ app.use((req, res, next) => {
 
 // --- API ROUTES ---
 
+/**
+ * POST /api/generate-video
+ * Handles the multimodal request to generate a video (simulated)
+ */
 app.post('/api/generate-video', async (req, res) => {
     // CRITICAL CHECK: Ensure API Key is available
     if (!STABILITY_API_KEY) {
@@ -76,7 +92,7 @@ app.post('/api/generate-video', async (req, res) => {
         // 4. Success Response: Placeholder for the real asset URL
         const videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4"; // Stable, working video URL
         
-        console.log(`Video processing initiated for prompt: ${prompt}`);
+        console.log(`Video simulated and link generated for User: ${userId}`);
         
         return res.status(200).json({ videoUrl: videoUrl });
 
@@ -90,16 +106,4 @@ app.post('/api/generate-video', async (req, res) => {
 
 // Catch-all for undefined routes, serving the frontend (index.html is handled by express.static)
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    } else {
-        res.status(404).json({ error: 'API endpoint not found.' });
-    }
-});
-
-// CRITICAL: Express server listening command for Render
-app.listen(PORT, '0.0.0.0', () => { 
-    console.log(`Server listening on port ${PORT}`);
-});
-
-export default app;
+    
