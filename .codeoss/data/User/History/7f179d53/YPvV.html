@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseMotionHub - Cinematic AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Neon Green Theme */
+        :root {
+            --neon-green: #39FF14;
+            --dark-bg: #111827;
+            --dark-card: #1f2937;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: #f3f4f6;
+        }
+        .text-neon {
+            color: var(--neon-green);
+        }
+        .border-neon {
+            border-color: var(--neon-green);
+        }
+        .bg-card {
+            background-color: var(--dark-card);
+        }
+        .btn-neon {
+            background-color: var(--neon-green);
+            color: var(--dark-bg);
+            transition: all 0.2s;
+        }
+        .btn-neon:hover {
+            background-color: #5dff4d;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        /* Style for the drag-and-drop area */
+        #drop-area {
+            border: 2px dashed var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.1);
+        }
+        /* Style for the generated script */
+        #script-output {
+            white-space: pre-wrap; 
+            font-family: monospace;
+            padding: 1rem;
+            border-left: 5px solid var(--neon-green);
+            background-color: #0b111a;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <header class="text-center mb-10">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white">
+            Pulse<span class="text-neon">Motion</span>Hub
+        </h1>
+        <p class="text-lg text-gray-400 mt-2">
+            AI-Powered Cinematic Video Generator
+        </p>
+    </header
