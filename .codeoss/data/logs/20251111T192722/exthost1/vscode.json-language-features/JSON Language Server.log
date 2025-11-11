@@ -18,3 +18,6 @@
 2025-11-11 19:31:53.138 [info] schema change detected vscode://schemas/settings/configurationDefaults
 2025-11-11 19:31:53.143 [info] read schema from vscode: vscode://schemas/vscode-extensions
 2025-11-11 19:31:53.334 [info] read schema from vscode: vscode://schemas/settings/configurationDefaults
+2025-11-11 20:28:26.172 [info] schema change detected vscode://schemas/settings/configurationDefaults
+2025-11-11 20:28:26.175 [info] read schema from vscode: vscode://schemas/vscode-extensions
+2025-11-11 20:28:26.303 [info] read schema from vscode: vscode://schemas/settings/configurationDefaults
