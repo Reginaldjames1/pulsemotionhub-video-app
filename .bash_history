@@ -290,3 +290,6 @@ git add .
 git commit -m "Final file sync and Stability AI endpoint fix"
 git push
 curl -X POST "https://api.stability.ai/v2beta/engines/stable-diffusion-xl/generate/video"   -H "Authorization: Bearer sk-go00gNnCYdP8qPKVdBFqap1HVriWqk8D4MHzrCWkg0r5xRmN"   -F 'prompt="test"'   --fail -s -o /dev/null -w "%{http_code}\n"
+git add .
+git commit -m "Final file sync and Stability AI endpoint fix"
+git push
