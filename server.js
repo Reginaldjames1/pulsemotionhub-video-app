@@ -57,15 +57,13 @@ app.post('/api/generate-video', async (req, res) => {
         });
         formData.append('output_format', 'mp4'); // Request a standard video format
         
-        // 3. Call the Stability AI API (The Final Corrected URL)
-        // This URL is verified for asynchronous job submission.
-        const apiResponse = await fetch("https://api.stability.ai/v2beta/generation/image-to-video/submit", {
+        // 3. Call the Stability AI API (The Final Corrected URL based on research)
+        // FIX: Using the simpler, documented URL: /v2beta/image-to-video
+        const apiResponse = await fetch("https://api.stability.ai/v2beta/image-to-video", {
             method: 'POST',
             headers: {
-                // Ensure the form data boundary header is included first
-                ...formData.getHeaders(), 
-                // Then add the Authorization header
                 'Authorization': `Bearer ${STABILITY_API_KEY}`,
+                ...formData.getHeaders(), 
             },
             body: formData,
             signal: AbortSignal.timeout(30000) 
