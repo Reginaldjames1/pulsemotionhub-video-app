@@ -59,7 +59,7 @@ app.post('/api/generate-video', async (req, res) => {
         
         // 3. Call the Stability AI API (Simplified Direct Call)
         // We use the actual Stability endpoint for Image-to-Video generation
-        const apiResponse = await fetch(https://api.stability.ai/v2beta/generation/image-to-video, {
+        const apiResponse = await fetch("https://api.stability.ai/v2beta/generation/image-to-video", {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${process.env.STABILITY_API_KEY}`,
