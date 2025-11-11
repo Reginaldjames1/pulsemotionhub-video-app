@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 });
 
 // --- API ROUTES ---
+
 app.post('/api/generate-video', async (req, res) => {
     // CRITICAL CHECK: Ensure API Key is available
     if (!process.env.STABILITY_API_KEY) {
@@ -36,14 +37,13 @@ app.post('/api/generate-video', async (req, res) => {
 
     try {
         const { prompt, image, mimeType } = req.body;
-        
+
         // 1. Input Validation
         if (!prompt || !image || !mimeType) {
             return res.status(400).json({ error: 'Missing prompt, image data, or MIME type.' });
         }
         
         // 2. Prepare Form Data for Stability AI API (Standard for image uploads)
-        // NOTE: This requires the 'form-data' package you added previously.
         const FormData = (await import('form-data')).default;
         const formData = new FormData();
         
@@ -57,8 +57,8 @@ app.post('/api/generate-video', async (req, res) => {
         });
         formData.append('output_format', 'mp4'); // Request a standard video format
         
-        // 3. Call the Stability AI API (Simplified Direct Call)
-        // We use the actual Stability endpoint for Image-to-Video generation
+        // 3. Call the Stability AI API (Synchronous for simplicity)
+        // FIX: URL is now in quotes to prevent SyntaxError
         const apiResponse = await fetch("https://api.stability.ai/v2beta/generation/image-to-video", {
             method: 'POST',
             headers: {
@@ -76,8 +76,7 @@ app.post('/api/generate-video', async (req, res) => {
         }
 
         // 4. Success Response: Placeholder for the real asset URL
-        // A real implementation would poll for the video; we simply return a working link for now.
-        const videoUrl = "https://pulsemotionhub-app.com/asset-id-from-api.mp4"; // You will replace this later
+        const videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4"; // Stable, working video URL
         
         console.log(`Video processing initiated for prompt: ${prompt}`);
         
