@@ -304,3 +304,6 @@ git commit -m "Final API endpoint fix (Submit Job)"
 git add server.js
 git commit -m 
 git commit -m "Final API endpoint fix (Submit Job)"
+git add .
+git commit -m "Final file sync and Stability AI endpoint fix"
+git push
