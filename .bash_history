@@ -189,3 +189,58 @@ git init
 git add .
 git commit -m "Finalizing code before moving to Render"
 git config --global user.email "wavie3582@gmail.com"  git config --global user.name "Reginald James"
+# Initialize a Git repository in your current folder
+git init
+# Add all files (the corrected server.js, index.html, package.json, etc.)
+git add .
+# Commit the final, corrected code
+git commit -m "Final fix of file swap and ready for Render"
+git config --global user.emai "wavie3582@gmail.com"
+git config --global user.name "Reginald James"
+git commit --amend -m "Final fix of file swap and ready for Render"
+# Set the remote origin (Connects your local folder to your GitHub repo)
+git remote add origin https://github.com/ReginaldJames1/pulsemotionhub-video-app.git
+# Push the final code to GitHub (Your code is now officially saved)
+git push -u origin master
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin main
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin main
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin main
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin main
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin ma
+echo "# pulsemotionhub-video-app" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Reginaldjames1/pulsemotionhub-video-app.git
+git push -u origin main

@@ -9,3 +9,6 @@
 2025-11-11 16:54:04.227 [info] [127.0.0.1][400f5ec4][ExtensionHostConnection] <1289> Launched Extension Host Process.
 2025-11-11 17:04:41.697 [info] [127.0.0.1][e2b8e2e3][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
 2025-11-11 17:04:41.989 [info] [127.0.0.1][400f5ec4][ExtensionHostConnection] <1289> Extension Host Process exited with code: 0, signal: null.
+2025-11-11 18:03:36.890 [info] [127.0.0.1][741ade78][ManagementConnection] New connection established.
+2025-11-11 18:03:36.925 [info] [127.0.0.1][1e576778][ExtensionHostConnection] New connection established.
+2025-11-11 18:03:36.929 [info] [127.0.0.1][1e576778][ExtensionHostConnection] <2704> Launched Extension Host Process.
