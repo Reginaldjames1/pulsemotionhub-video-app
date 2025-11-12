@@ -325,3 +325,6 @@ git push
 git add .
 git commit -m "Final verified endpoint fix based on external research"
 git push
+git add .
+git commit -m "update frontend and backend for Stability AI video"
+git push
