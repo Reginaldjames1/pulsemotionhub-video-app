@@ -337,3 +337,6 @@ git push
 git add .
 git commit -m "add Stability API debug logging for image-to-video 404 investigation"
 git push
+git add .
+git commit -m "update Stability AI endpoint to stable-video-diffusion-1.1"
+git push

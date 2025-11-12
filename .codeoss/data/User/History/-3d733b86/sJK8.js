@@ -73,8 +73,8 @@ app.get('/api/video-result/:id', async (req, res) => {
     return res.status(500).json({ error: 'API key missing' });
   }
   try {
-    const resultUrl = `https://api.stability.ai/v2beta/engines/stable-video-diffusion-1.1/image-to-video/result/${id}`;
-
+    const resultUrl = const resultUrl = `https://api.stability.ai/v2beta/engines/stable-video-diffusion-1.1/image-to-video/result/${id}`;
+;
     console.log('➡️ Polling Stability API URL:', resultUrl);
 
     const resp = await fetch(resultUrl, {

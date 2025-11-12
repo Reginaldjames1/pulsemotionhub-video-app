@@ -74,7 +74,7 @@ app.get('/api/video-result/:id', async (req, res) => {
   }
   try {
     const resultUrl = `https://api.stability.ai/v2beta/engines/stable-video-diffusion-1.1/image-to-video/result/${id}`;
-
+;
     console.log('➡️ Polling Stability API URL:', resultUrl);
 
     const resp = await fetch(resultUrl, {
