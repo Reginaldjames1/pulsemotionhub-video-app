@@ -376,3 +376,35 @@ curl -i -sS -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-v
     "prompt": "A cinematic pan around a futuristic city skyline at sunset",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"
   }'
+git add .
+git commit -m "Wire FAL Kling v2.1 standard; return final video URL"
+git push
+git config --global credential.helper store
+git push
+git status
+git add .
+git commit -m "Added Stripe + PayPal checkout, webhook support, new frontend"
+git push origin main
+git config --global credential.helper store
+git push
+git reset --soft HEAD~1
+git rm --cached .git-credentials || true
+git rm --cached -r codelab05 || true   # this is where those Gemini log files live
+git rm --cached -r .codelab05
+ls -a
+find . -type d -name "*codelab*"
+git push origin main
+echo ".env" >> .gitignore
+cat .gitignore
+nano .env
+ls -a
+grep -R "sk_" -n .
+grep -R "whsec" -n .
+grep -R "paypal" -n .
+git add .
+git commit -m "Moved secrets to .env and cleaned repo"
+git push origin main
+rm .git-credentials
+ls -a
+git rm --cached .git-credentials
+git reset --soft HEAD~1

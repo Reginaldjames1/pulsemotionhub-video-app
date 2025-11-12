@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PulseMotionHub — Image-to-Video AI Generator</title>
+  <meta name="description" content="Turn any image into a cinematic AI video in seconds. Fast, affordable, creator-friendly. Try PulseMotionHub now." />
+  <link rel="canonical" href="https://pulsemotionhub-video-app.onrender.com/" />
+
+  <!-- OpenGraph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="PulseMotionHub — Image-to-Video AI Generator" />
+  <meta property="og:description" content="Turn any image into a cinematic AI video in seconds. Fast, affordable, creator-friendly." />
+  <meta property="og:image" content="https://dummyimage.com/1200x630/1e40af/ffffff&text=PulseMotionHub" />
+  <meta property="og:url" content="https://pulsemotionhub-video-app.onrender.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1e40af',
+            primaryHover: '#1b3a99',
+            paper: '#ffffff',
+            ink: '#0b1220'
+          }
+        },
+        fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','Segoe UI','Roboto','Helvetica','Arial','Apple Color Emoji','Segoe UI Emoji'] }
+      }
+    }
+  </script>
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Theme + UI styles -->
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#ffffff; --text:#0b1220; --muted:#6b7280; --ring:#e5e7eb;
+      --accent:#1e40af; --accent-weak:#e1e7ff;
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1220; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --ring:#1f2937;
+      --accent:#39FF14; --accent-weak:rgba(57,255,20,.08);
+    }
+    body{ background:var(--bg); color:var(--text); }
+    .card{ background:var(--card); border:1px solid var(--ring); }
+    .btn-primary{
+      background:var(--accent); color:#fff; font-weight:700;
+      transition:all .2s; box-shadow:0 6px 16px rgba(0,0,0,.08);
+    }
+    html[data-theme="dark"] .btn-primary{ color:#0b1220; }
+    .btn-primary:hover{ filter:brightness(.93) }
+    .btn-ghost{ border:1px solid var(--ring); background:transparent; }
+    .chip{ background:var(--accent-weak); color:var(--accent); border:1px solid var(--ring); }
+    .dashed{ border:2px dashed var(--accent) }
+    .progressbar{ background:var(--accent); height:10px; width:0%; border-radius:8px; transition:width .35s linear; }
+    .shadow-soft{ box-shadow:0 10px 30px rgba(0,0,0,.08); }
+    .shadow-strong{ box-shadow:0 18px 48px rgba(0,0,0,.18); }
+    .mono{ font-family: ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .link{ color:var(--accent); text-decoration:underline; }
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--ring); border-radius: 10px; padding: 10px 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 14px; z-index: 70;
+    }
+    .hidden{ display:none; }
+  </style>
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"PulseMotionHub",
+    "applicationCategory":"MultimediaApplication",
+    "operatingSystem":"Web",
+    "url":"https://pulsemotionhub-video-app.onrender.com/",
+    "offers":{ "@type":"Offer", "priceCurrency":"USD", "price":"0.00" }
+  }
+  </script>
+
+  <!-- Minimal analytics hook -->
+  <script>
+    window.pmTrack = (ev, data={})=>{ try{ console.log('[PMH]', ev, data); }catch(e){} };
+    function toast(msg, ms=2500){
+      const t = document.getElementById('toast'); if(!t) return;
+      t.textContent = msg; t.classList.remove('hidden');
+      clearTimeout(t._hide); t._hide = setTimeout(()=> t.classList.add('hidden'), ms);
+    }
+  </script>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/70 card border-0">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 font-extrabold text-xl">
+        <i data-lucide="zap" class="w-5 h-5 text-[var(--accent)]"></i>
+        <span>PULSE<span class="text-[var(--accent)]">MOTION</span>HUB</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#tool" class="hover:opacity-80">Generator</a>
+        <a href="#pricing" class="hover:opacity-80">Pricing</a>
+        <a href="#faq" class="hover:opacity-80">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" class="btn-ghost rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+          <i data-lucide="moon-star" class="w-4 h-4"></i><span>Dark</span>
+        </button>
+        <a href="#pricing" class="btn-primary rounded-lg px-4 py-2 text-sm">Get Credits</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-7xl mx-auto px-4 md:px-8 pt-10 md:pt-14">
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 chip px-2 py-1 rounded-full text-xs mb-4">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Image → Video in Seconds
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+          Turn Images into <span class="text-[var(--accent)]">Cinematic</span> Videos
+        </h1>
+        <p class="mt-4 text-[color:var(--muted)] max-w-prose">
+          Upload an image or paste a URL, describe the motion, and get a shareable video. Built for creators, marketers, and studios.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <a href="#tool" class="btn-primary rounded-lg px-5 py-3">Try the Generator</a>
+          <a href="#pricing" class="btn-ghost rounded-lg px-5 py-3">See Pricing</a>
+        </div>
+        <p class="mt-3 text-xs text-[color:var(--muted)]">Commercial use allowed. Content policy applies.</p>
+      </div>
+      <div class="card shadow-strong rounded-xl p-4">
+        <video class="w-full rounded-lg" autoplay muted loop playsinline>
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <section id="tool" class="max-w-7xl mx-auto px-4 md:px-8 py-10">
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- Inputs -->
+      <div class="lg:col-span-1 card rounded-xl p-6 shadow-soft">
+        <h2 class="text-xl font-bold mb-1">1) Source & Motion</h2>
+        <p class="text-sm text-[color:var(--muted)] mb-4">Use an image URL or upload a file.</p>
+
+        <!-- Image URL -->
+        <label class="block text-sm font-semibold mb-1">Image URL (optional)</label>
+        <input id="image-url" type="url" placeholder="https://example.com/image.jpg"
+               class="w-full rounded-lg border px-3 py-2 mb-4 bg-transparent border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"/>
+
+        <!-- Upload -->
+        <div id="drop-area" class="rounded-xl dashed p-5 mb-4 text-center cursor-pointer">
+          <input id="image-upload" type="file" accept="image/*" class="hidden"/>
+          <p id="drop-text" class="text-sm">
+            Drag & drop, or <span class="underline">click to upload</span>.
+          </p>
+          <img id="image-preview" alt="Preview" class="hidden mx-auto mt-3 max-h-40 rounded"/>
+        </div>
+
+        <!-- Prompt -->
+        <label class="block text-sm font-semibold mb-1">Motion Prompt</label>
+        <textarea id="prompt" rows="3" placeholder="Slow orbit around subject, soft morning light, gentle parallax…"
+          class="w-full rounded-lg border px-3 py-2 mb-4 bg-transparent border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"></textarea>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Quality</label>
+            <select id="tier" class="w-full rounded-lg border px-3 py-2 bg-transparent border-[var(--ring)]">
+              <option value="standard" selected>Standard (Best value)</option>
+              <option value="premium" disabled>Premium (Coming soon)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Duration</label>
+            <select id="duration" class="w-full rounded-lg border px-3 py-2 bg-transparent border-[var(--ring)]">
+              <option value="5" selected>~5s</option>
+              <option value="8">~8s</option>
+              <option value="10">~10s</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="generate-btn" class="btn-primary w-full rounded-lg py-3 disabled:opacity-60" disabled>
+          <i data-lucide="wand-2" class="w-4 h-4 inline-block mr-2"></i> Generate Video
+        </button>
+
+        <p class="mt-3 text-xs text-[color:var(--muted)]">By generating you agree to our <a href="#faq" class="link">Terms & Content Policy</a>.</p>
+      </div>
+
+      <!-- Output -->
+      <div class="lg:col-span-2 card rounded-xl p-6 shadow-soft">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold">2) Result</h3>
+          <span id="status-text" class="text-sm text-[color:var(--muted)]" aria-live="polite">Ready.</span>
+        </div>
+
+        <div id="progress-wrap" class="mt-4 hidden">
+          <div class="w-full bg-[var(--ring)] rounded-lg overflow-hidden">
+            <div id="progress-bar" class="progressbar"></div>
+          </div>
+        </div>
+
+        <div id="result" class="mt-5 rounded-lg border border-[var(--ring)] p-4 bg-[var(--card)]">
+          <div id="placeholder" class="text-sm text-[color:var(--muted)]">
+            // Your video will appear here after processing.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="max-w-7xl mx-auto px-4 md:px-8 py-12">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-3">Simple, Creator-Friendly Pricing</h2>
+    <p class="text-center text-[color:var(--muted)] mb-10">Start small, scale up as you grow. Only pay for what you use.</p>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card rounded-xl p-6 shadow-soft">
+        <h3 class="text-xl font-bold">Starter Credits</h3>
+        <p class="text-[color:var(--muted)] text-sm">Pay-as-you-go.</p>
+        <div class="text-4xl font-extrabold mt-3">$9.99</div>
+        <p class="text-sm mt-1">~10 Standard clips</p>
+        <ul class="mt-4 text-sm space-y-2">
+          <li>• Kling v2.1 Standard</li>
+          <li>• 720–1080p</li>
+          <li>• Commercial use</li>
+        </ul>
+        <button class="btn-primary w-full rounded-lg py-2 mt-6">Buy Credits</button>
+      </div>
+
+      <div class="card rounded-xl p-6 shadow-soft ring-2 ring-[var(--accent)]">
+        <div class="chip inline-block px-2 py-1 rounded-full text-xs mb-3">Best Value</div>
+        <h3 class="text-xl font-bold">Creator Monthly</h3>
+        <p class="text-[color:var(--muted)] text-sm">For consistent posting.</p>
+        <div class="text-4xl font-extrabold mt-3">$19.99</div>
+        <p class="text-sm mt-1">25 Standard clips + rollover</p>
+        <ul class="mt-4 text-sm space-y-2">
+          <li>• Priority queue</li>
+          <li>• Rollover unused credits</li>
+          <li>• Optional Premium upcharge</li>
+        </ul>
+        <button class="btn-primary w-full rounded-lg py-2 mt-6">Subscribe</button>
+      </div>
+
+      <div class="card rounded-xl p-6 shadow-soft">
+        <h3 class="text-xl font-bold">Pro Studio</h3>
+        <p class="text-[color:var(--muted)] text-sm">For agencies & teams.</p>
+        <div class="text-4xl font-extrabold mt-3">$39.99</div>
+        <p class="text-sm mt-1">10 Premium clips (or 40 Standard)</p>
+        <ul class="mt-4 text-sm space-y-2">
+          <li>• Premium models</li>
+          <li>• Team seats (soon)</li>
+          <li>• Priority support</li>
+        </ul>
+        <button class="btn-primary w-full rounded-lg py-2 mt-6">Go Pro</button>
+      </div>
+    </div>
+
+    <p class="text-xs text-center text-[color:var(--muted)] mt-6">Introductory pricing. Premium unlocks higher-fidelity providers as available.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="max-w-4xl mx-auto px-4 md:px-8 py-10">
+    <h3 class="text-2xl font-extrabold mb-6">FAQ</h3>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card rounded-xl p-5">
+        <h4 class="font-semibold">What image types are supported?</h4>
+        <p class="text-sm text-[color:var(--muted)] mt-2">PNG, JPG, and WEBP. Paste a URL or upload directly.</p>
+      </div>
+      <div class="card rounded-xl p-5">
+        <h4 class="font-semibold">How long are the clips?</h4>
+        <p class="text-sm text-[color:var(--muted)] mt-2">Most clips are 5–10 seconds. Longer clips may cost more and take longer to render.</p>
+      </div>
+      <div class="card rounded-xl p-5">
+        <h4 class="font-semibold">Commercial usage?</h4>
+        <p class="text-sm text-[color:var(--muted)] mt-2">Yes, see our terms. Some providers have additional restrictions.</p>
+      </div>
+      <div class="card rounded-xl p-5">
+        <h4 class="font-semibold">Refunds?</h4>
+        <p class="text-sm text-[color:var(--muted)] mt-2">Credits are non-refundable but never expire. Contact us if something breaks.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-10 py-10 border-t border-[var(--ring)] text-sm">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="zap" class="w-4 h-4 text-[var(--accent)]"></i>
+        <span class="font-semibold">PulseMotionHub</span>
+      </div>
+      <div class="flex items-center gap-4 text-[color:var(--muted)]">
+        <a href="#" class="hover:opacity-80">Privacy</a>
+        <a href="#" class="hover:opacity-80">Terms</a>
+        <span>© <span id="year"></span> PulseMotionHub</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- App JS -->
+  <script>
+    // Theme toggle (persist)
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('pmh_theme');
+    if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); }
+    themeToggle?.addEventListener('click', ()=>{
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('pmh_theme', isDark ? 'light' : 'dark');
+      lucide.createIcons();
+    });
+
+    // Year + Icons
+    document.getElementById('year').textContent = new Date().getFullYear();
+    window.addEventListener('DOMContentLoaded', ()=> lucide.createIcons());
+
+    // Elements
+    const dropArea = document.getElementById('drop-area');
+    const imageUpload = document.getElementById('image-upload');
+    const imagePreview = document.getElementById('image-preview');
+    const imageUrlInput = document.getElementById('image-url');
+    const generateBtn = document.getElementById('generate-btn');
+    const promptInput = document.getElementById('prompt');
+    const statusText = document.getElementById('status-text');
+    const progressWrap = document.getElementById('progress-wrap');
+    const progressBar = document.getElementById('progress-bar');
+    const placeholder = document.getElementById('placeholder');
+    const tierSelect = document.getElementById('tier');
+    const durationSelect = document.getElementById('duration');
+
+    let base64Image = null, mimeType = null;
+
+    function ready(){
+      const hasUrl = imageUrlInput.value.trim().startsWith('http');
+      const hasUpload = base64Image && mimeType;
+      const hasPrompt = promptInput.value.trim().length > 0;
+      return (hasUrl || hasUpload) && hasPrompt;
+    }
+    function updateBtn(){ generateBtn.disabled = !ready(); }
+
+    // File handling (no alerts, toast + status)
+    function handleFile(file){
+      if(!file || !file.type.startsWith('image/')){
+        statusText.textContent = 'Please choose a valid image file (png/jpg/webp).';
+        toast('Invalid image file');
+        return;
+      }
+      const MAX_MB = 12;
+      if(file.size > MAX_MB*1024*1024){
+        statusText.textContent = `Image too large. Max ${MAX_MB}MB.`;
+        toast(`Image too large (>${MAX_MB}MB)`);
+        return;
+      }
+      const r = new FileReader();
+      r.onload = e=>{
+        imagePreview.src = e.target.result;
+        imagePreview.classList.remove('hidden');
+        document.getElementById('drop-text').classList.add('hidden');
+        const [type, data] = e.target.result.split(',');
+        mimeType = type.split(':')[1].split(';')[0];
+        base64Image = data;
+        updateBtn();
+        statusText.textContent = `Loaded: ${file.name}`;
+      };
+      r.readAsDataURL(file);
+    }
+
+    // Upload events
+    dropArea.addEventListener('click', ()=> imageUpload.click());
+    imageUpload.addEventListener('change', e=> handleFile(e.target.files[0]));
+    ['dragenter','dragover','dragleave','drop'].forEach(ev=>{
+      dropArea.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); });
+    });
+    dropArea.addEventListener('dragenter', ()=> dropArea.classList.add('dashed'));
+    dropArea.addEventListener('dragleave', ()=> dropArea.classList.remove('dashed'));
+    dropArea.addEventListener('drop', e=>{
+      const f = e.dataTransfer.files?.[0]; if(f) handleFile(f);
+      dropArea.classList.remove('dashed');
+    });
+
+    // URL validation (HEAD)
+    imageUrlInput.addEventListener('blur', async ()=>{
+      const url = imageUrlInput.value.trim();
+      if(!url) return;
+      try{
+        statusText.textContent = 'Validating image URL…';
+        const head = await fetch(url, { method: 'HEAD' });
+        const type = head.headers.get('content-type') || '';
+        if(!head.ok || !type.startsWith('image/')){
+          statusText.textContent = 'That URL does not look like an image.';
+          toast('URL is not an image');
+        } else {
+          statusText.textContent = 'Image URL looks good.';
+        }
+      }catch{
+        statusText.textContent = 'Could not validate URL.';
+        toast('Could not reach image URL');
+      }
+    });
+
+    promptInput.addEventListener('input', updateBtn);
+    imageUrlInput.addEventListener('input', updateBtn);
+
+    // Generate
+    generateBtn.addEventListener('click', async ()=>{
+      if(!ready()) return;
+
+      pmTrack('generate_clicked', { tier:tierSelect.value, duration:durationSelect.value });
+
+      generateBtn.disabled = true;
+      progressWrap.classList.remove('hidden');
+      progressBar.style.width = '10%';
+      statusText.textContent = 'Contacting server…';
+      placeholder.classList.add('mono');
+      placeholder.textContent = '// Sending request to AI server…';
+
+      const payload = { prompt: promptInput.value.trim(), duration: durationSelect.value };
+      if(imageUrlInput.value.trim().startsWith('http')){
+        payload.imageUrl = imageUrlInput.value.trim();
+      }else{
+        payload.image = base64Image; payload.mimeType = mimeType;
+      }
+
+      // faux progress
+      const id = setInterval(()=>{
+        const w = parseInt(progressBar.style.width);
+        if(w < 90){ progressBar.style.width = (w+5)+'%'; statusText.textContent = `Processing… ${w+5}%`; }
+      }, 400);
+
+      try{
+        const res = await fetch(`/api/generate-video?tier=${encodeURIComponent(tierSelect.value)}`, {
+          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+        });
+        const data = await res.json().catch(()=> ({}));
+
+        clearInterval(id);
+        progressBar.style.width = '100%';
+
+        if(!res.ok){ throw new Error(data?.error || res.statusText); }
+
+        if(data.videoUrl){
+          placeholder.classList.remove('mono');
+          placeholder.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-sm text-[color:var(--muted)]">Result</div>
+              <a href="${data.videoUrl}" target="_blank" class="link text-sm">Open in new tab</a>
+            </div>
+            <video controls class="w-full rounded-lg border border-[var(--ring)] shadow-soft">
+              <source src="${data.videoUrl}" type="${data.contentType || 'video/mp4'}" />
+            </video>
+          `;
+          statusText.textContent = '✅ Done.';
+          pmTrack('video_succeeded', { bytes:data.file_size || null });
+        }else{
+          throw new Error('No video URL returned.');
+        }
+      }catch(err){
+        clearInterval(id);
+        statusText.textContent = '❌ Failed.';
+        placeholder.classList.add('mono');
+        placeholder.textContent = `// ERROR: ${err.message || err}`;
+        pmTrack('video_failed', { reason:String(err) });
+        toast('Generation failed. Check inputs or try again.');
+      }finally{
+        setTimeout(()=> progressWrap.classList.add('hidden'), 1600);
+        generateBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

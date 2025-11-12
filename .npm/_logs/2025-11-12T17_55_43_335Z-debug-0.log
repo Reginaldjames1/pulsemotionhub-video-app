@@ -1,0 +1,101 @@
+0 verbose cli /usr/local/nvm/versions/node/v22.21.0/bin/node /usr/local/nvm/versions/node/v22.21.0/bin/npm
+1 info using npm@11.6.2
+2 info using node@v22.21.0
+3 silly config load:file:/usr/local/nvm/versions/node/v22.21.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/wavie3582/.cache/typescript/5.8/.npmrc
+5 silly config load:file:/home/wavie3582/.npmrc
+6 silly config load:file:/usr/local/nvm/versions/node/v22.21.0/etc/npmrc
+7 verbose title npm install @types/cors@ts5.8 @types/object-assign@ts5.8 @types/vary@ts5.8
+8 verbose argv "install" "--ignore-scripts" "@types/cors@ts5.8" "@types/object-assign@ts5.8" "@types/vary@ts5.8" "--save-dev" "--user-agent" "typesInstaller/5.8.3"
+9 verbose logfile logs-max:10 dir:/home/wavie3582/.npm/_logs/2025-11-12T17_55_43_335Z-
+10 verbose logfile /home/wavie3582/.npm/_logs/2025-11-12T17_55_43_335Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+14 silly packumentCache corgi:https://registry.npmjs.org/@types%2fcors cache-miss
+15 silly packumentCache corgi:https://registry.npmjs.org/@types%2fobject-assign cache-miss
+16 silly packumentCache corgi:https://registry.npmjs.org/@types%2fvary cache-miss
+17 http fetch GET 200 https://registry.npmjs.org/@types%2fvary 199ms (cache miss)
+18 silly packumentCache corgi:https://registry.npmjs.org/@types%2fvary set size:undefined disposed:false
+19 http fetch GET 200 https://registry.npmjs.org/@types%2fcors 206ms (cache miss)
+20 silly packumentCache corgi:https://registry.npmjs.org/@types%2fcors set size:undefined disposed:false
+21 http fetch GET 200 https://registry.npmjs.org/@types%2fobject-assign 556ms (cache miss)
+22 silly packumentCache corgi:https://registry.npmjs.org/@types%2fobject-assign set size:undefined disposed:false
+23 silly idealTree buildDeps
+24 silly fetch manifest @types/vary@1.1.3
+25 silly packumentCache full:https://registry.npmjs.org/@types%2fvary cache-miss
+26 http fetch GET 200 https://registry.npmjs.org/@types%2fvary 78ms (cache miss)
+27 silly packumentCache full:https://registry.npmjs.org/@types%2fvary set size:undefined disposed:false
+28 silly fetch manifest @types/cors@2.8.19
+29 silly packumentCache full:https://registry.npmjs.org/@types%2fcors cache-miss
+30 http fetch GET 200 https://registry.npmjs.org/@types%2fcors 68ms (cache miss)
+31 silly packumentCache full:https://registry.npmjs.org/@types%2fcors set size:undefined disposed:false
+32 silly fetch manifest @types/object-assign@4.0.33
+33 silly packumentCache full:https://registry.npmjs.org/@types%2fobject-assign cache-miss
+34 http fetch GET 200 https://registry.npmjs.org/@types%2fobject-assign 88ms (cache miss)
+35 silly packumentCache full:https://registry.npmjs.org/@types%2fobject-assign set size:undefined disposed:false
+36 silly placeDep ROOT @types/cors@2.8.19 OK for:  want: 2.8.19
+37 silly placeDep ROOT @types/object-assign@4.0.33 OK for:  want: 4.0.33
+38 silly placeDep ROOT @types/vary@1.1.3 OK for:  want: 1.1.3
+39 silly reify moves {}
+40 silly audit bulk request {
+40 silly audit   '@types/body-parser': [ '1.19.6' ],
+40 silly audit   '@types/connect': [ '3.4.38' ],
+40 silly audit   '@types/express': [ '5.0.5' ],
+40 silly audit   '@types/express-serve-static-core': [ '5.1.0' ],
+40 silly audit   '@types/http-errors': [ '2.0.5' ],
+40 silly audit   '@types/mime': [ '1.3.5' ],
+40 silly audit   '@types/node': [ '24.9.1' ],
+40 silly audit   '@types/node-fetch': [ '2.6.13' ],
+40 silly audit   '@types/qs': [ '6.14.0' ],
+40 silly audit   '@types/range-parser': [ '1.2.7' ],
+40 silly audit   '@types/react': [ '19.2.2' ],
+40 silly audit   '@types/send': [ '1.2.1', '0.17.6' ],
+40 silly audit   '@types/serve-static': [ '1.15.10' ],
+40 silly audit   asynckit: [ '0.4.0' ],
+40 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+40 silly audit   'combined-stream': [ '1.0.8' ],
+40 silly audit   csstype: [ '3.1.3' ],
+40 silly audit   'delayed-stream': [ '1.0.0' ],
+40 silly audit   'dunder-proto': [ '1.0.1' ],
+40 silly audit   'es-define-property': [ '1.0.1' ],
+40 silly audit   'es-errors': [ '1.3.0' ],
+40 silly audit   'es-object-atoms': [ '1.1.1' ],
+40 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+40 silly audit   'form-data': [ '4.0.4' ],
+40 silly audit   'function-bind': [ '1.1.2' ],
+40 silly audit   'get-intrinsic': [ '1.3.0' ],
+40 silly audit   'get-proto': [ '1.0.1' ],
+40 silly audit   gopd: [ '1.2.0' ],
+40 silly audit   'has-symbols': [ '1.1.0' ],
+40 silly audit   'has-tostringtag': [ '1.0.2' ],
+40 silly audit   hasown: [ '2.0.2' ],
+40 silly audit   'math-intrinsics': [ '1.1.0' ],
+40 silly audit   'mime-db': [ '1.52.0' ],
+40 silly audit   'mime-types': [ '2.1.35' ],
+40 silly audit   'types-registry': [ '0.1.746' ],
+40 silly audit   'undici-types': [ '7.16.0' ],
+40 silly audit   '@types/cors': [ '2.8.19' ],
+40 silly audit   '@types/object-assign': [ '4.0.33' ],
+40 silly audit   '@types/vary': [ '1.1.3' ]
+40 silly audit }
+41 http cache @types/vary@https://registry.npmjs.org/@types/vary/-/vary-1.1.3.tgz 1ms (cache hit)
+42 http cache @types/object-assign@https://registry.npmjs.org/@types/object-assign/-/object-assign-4.0.33.tgz 0ms (cache hit)
+43 http cache @types/cors@https://registry.npmjs.org/@types/cors/-/cors-2.8.19.tgz 0ms (cache hit)
+44 silly tarball no local data for @types/vary@https://registry.npmjs.org/@types/vary/-/vary-1.1.3.tgz. Extracting by manifest.
+45 silly tarball no local data for @types/object-assign@https://registry.npmjs.org/@types/object-assign/-/object-assign-4.0.33.tgz. Extracting by manifest.
+46 silly tarball no local data for @types/cors@https://registry.npmjs.org/@types/cors/-/cors-2.8.19.tgz. Extracting by manifest.
+47 http fetch GET 200 https://registry.npmjs.org/@types/object-assign/-/object-assign-4.0.33.tgz 76ms (cache miss)
+48 http fetch GET 200 https://registry.npmjs.org/@types/vary/-/vary-1.1.3.tgz 96ms (cache miss)
+49 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 124ms
+50 silly audit report {}
+51 http fetch GET 200 https://registry.npmjs.org/@types/cors/-/cors-2.8.19.tgz 142ms (cache miss)
+52 silly ADD node_modules/@types/vary
+53 silly ADD node_modules/@types/object-assign
+54 silly ADD node_modules/@types/cors
+55 verbose cwd /home/wavie3582/.cache/typescript/5.8
+56 verbose os Linux 6.6.111+
+57 verbose node v22.21.0
+58 verbose npm  v11.6.2
+59 verbose exit 0
+60 info ok
