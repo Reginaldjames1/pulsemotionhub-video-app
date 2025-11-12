@@ -328,3 +328,6 @@ git push
 git add .
 git commit -m "update frontend and backend for Stability AI video"
 git push
+git add .
+git commit -m "replace server.js and index.html with Stability AI working version"
+git push

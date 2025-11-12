@@ -7,3 +7,5 @@
 2025-11-11 19:27:31.526 [info] [127.0.0.1][b6068f31][ExtensionHostConnection] New connection established.
 2025-11-11 19:27:31.527 [info] [127.0.0.1][92047b8d][ManagementConnection] New connection established.
 2025-11-11 19:27:32.253 [info] [127.0.0.1][b6068f31][ExtensionHostConnection] <1247> Launched Extension Host Process.
+2025-11-12 01:06:26.147 [info] [127.0.0.1][92047b8d][ManagementConnection] The client has reconnected.
+2025-11-12 01:06:27.081 [info] [127.0.0.1][b6068f31][ExtensionHostConnection] The client has reconnected.
