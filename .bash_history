@@ -340,3 +340,39 @@ git push
 git add .
 git commit -m "update Stability AI endpoint to stable-video-diffusion-1.1"
 git push
+git add .
+git commit -m "fix duplicated const line and correct Stability video endpoint"
+git push
+curl -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key YOUR_FAL_API_KEY_HERE"   -H "Content-Type: application/json"   -d '{
+        "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+        "image_url": "https://fal.ai/assets/example-image.jpg"
+      }'
+curl -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5"   -H "Content-Type: application/json"   -d '{
+        "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+        "image_url": "https://fal.ai/assets/example-image.jpg"
+      }'
+curl -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key YOUR_FAL_API_KEY_HERE"   -H "Content-Type: application/json"   -d '{
+        "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+        "image_url": "https://fal.ai/assets/example-image.jpg"
+      }
+ curl -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video" \
+  -H "Authorization: Key efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5" \
+  -H "Content-Type: application/json" \
+  -d '{
+export FAL_API_KEY='efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5'
+curl -i -sS -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key $FAL_API_KEY"   -H "Content-Type: application/json"   --data '{"prompt":"A cinematic pan around a futuristic city skyline at sunset","image_url":"https://fal.ai/assets/example-image.jpg"}'
+export FAL_API_KEY='efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5'
+curl -i -sS -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key $FAL_API_KEY"   -H "Content-Type: application/json"   -d '{
+    "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+    "image_url": "https://fal.ai/assets/example-image.jpg"
+  }'
+export FAL_API_KEY='efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5'
+curl -i -sS -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key $FAL_API_KEY"   -H "Content-Type: application/json"   -d '{
+    "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"
+  }'
+export FAL_API_KEY='efa958b2-8a50-4e5f-94e6-245cc7b82735:cfe49471bf53fc2b793779156e2daae5'
+curl -i -sS -X POST "https://fal.run/fal-ai/kling-video/v2.1/standard/image-to-video"   -H "Authorization: Key $FAL_API_KEY"   -H "Content-Type: application/json"   -d '{
+    "prompt": "A cinematic pan around a futuristic city skyline at sunset",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"
+  }'
