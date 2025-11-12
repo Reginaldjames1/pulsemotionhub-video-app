@@ -331,3 +331,6 @@ git push
 git add .
 git commit -m "replace server.js and index.html with Stability AI working version"
 git push
+git add .
+git commit -m "replace server.js and index.html with Stability AI working version"
+git push
