@@ -22,7 +22,8 @@ const {
 
   // ----- STRIPE -----
   STRIPE_SECRET_KEY,
-  STRIPE_PRICE_STARTER,
+  STRIPE_PRICE_STARTER,              // preferred name
+  STRIPE_PRICE_STARTER_CREDITS,      // legacy / alt name (Render env likely uses this)
   STRIPE_PRICE_CREATOR_MONTHLY,
   STRIPE_PRICE_PRO_STUDIO,
   STRIPE_WEBHOOK_SECRET,
@@ -39,6 +40,9 @@ const {
   // ----- APP -----
   PUBLIC_BASE_URL = 'https://pulsemotionhub-video-app.onrender.com'
 } = process.env;
+
+// normalize starter price env var so either name works
+const PRICE_STARTER = STRIPE_PRICE_STARTER || STRIPE_PRICE_STARTER_CREDITS;
 
 // ---------- SETUP ----------
 const app = express();
@@ -77,7 +81,7 @@ app.post('/api/generate-video', async (req, res) => {
 // ---------- STRIPE CHECKOUT ----------
 const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
 
-// Accept multiple aliases for each plan so we never see "Unknown plan" again
+// Accept multiple aliases for each plan
 function stripePriceForPlan(rawPlan) {
   const plan = (rawPlan || '').toLowerCase().trim();
   console.log('Stripe checkout requested for plan:', plan);
@@ -87,7 +91,7 @@ function stripePriceForPlan(rawPlan) {
     case 'starter-credits':
     case 'starter_credit':
     case 'credits':
-      return STRIPE_PRICE_STARTER;
+      return PRICE_STARTER;
 
     case 'creator-monthly':
     case 'creator_monthly':
@@ -101,7 +105,7 @@ function stripePriceForPlan(rawPlan) {
       return STRIPE_PRICE_PRO_STUDIO;
 
     default:
-      return null; // we’ll handle this gracefully in the route
+      return null;
   }
 }
 
@@ -113,7 +117,7 @@ app.post('/api/checkout/stripe/session', async (req, res) => {
     const price = stripePriceForPlan(planParam);
 
     if (!price) {
-      console.warn('Stripe checkout called with unknown plan:', planParam);
+      console.warn('Stripe checkout called with unknown or unconfigured plan:', planParam);
       return res.status(400).json({ error: `Unknown plan: ${planParam}` });
     }
 
@@ -182,10 +186,10 @@ async function getPayPalAccessToken() {
   return resp.json();
 }
 
-// Keep PayPal amounts in sync with Stripe plans & support aliases
+// Same aliases as Stripe, but returns amount + description
 function planAmount(rawPlan) {
   const plan = (rawPlan || '').toLowerCase().trim();
-  console.log('PayPal checkout requested for plan:', plan);
+  console.log('PayPal/crypto checkout requested for plan:', plan);
 
   switch (plan) {
     case 'starter':
@@ -359,4 +363,5 @@ app.get('*', (req, res) => {
 // ---------- START SERVER ----------
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ PulseMotionHub server listening on ${PORT} (${NODE_ENV})`);
+  console.log('Stripe starter price (resolved):', PRICE_STARTER || '(not set)');
 });
