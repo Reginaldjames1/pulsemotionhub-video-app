@@ -1,622 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Basic -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PulseMotionHub — Image-to-Video AI Generator</title>
-  <meta name="description" content="Turn any image into a cinematic AI video in seconds. Fast, affordable, creator-friendly. Try PulseMotionHub now." />
-  <link rel="canonical" href="https://pulsemotionhub-video-app.onrender.com/" />
-
-  <!-- OpenGraph / Social -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="PulseMotionHub — Image-to-Video AI Generator" />
-  <meta property="og:description" content="Turn any image into a cinematic AI video in seconds. Fast, affordable, creator-friendly." />
-  <meta property="og:image" content="https://dummyimage.com/1200x630/1e40af/ffffff&text=PulseMotionHub" />
-  <meta property="og:url" content="https://pulsemotionhub-video-app.onrender.com/" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1e40af',
-            primaryHover: '#1b3a99',
-            paper: '#ffffff',
-            ink: '#0b1220'
-          }
-        },
-        fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','Segoe UI','Roboto','Helvetica','Arial','Apple Color Emoji','Segoe UI Emoji'] }
-      }
-    }
-  </script>
-
-  <!-- Icons -->
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-
-  <!-- Theme + UI styles -->
-  <style>
-    :root{
-      --bg:#f8fafc; --card:#ffffff; --text:#0b1220; --muted:#6b7280; --ring:#e5e7eb;
-      --accent:#1e40af; --accent-weak:#e1e7ff;
-      --ok:#10b981; --error:#ef4444;
-    }
-    html[data-theme="dark"]{
-      --bg:#0b1220; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --ring:#1f2937;
-      --accent:#39FF14; --accent-weak:rgba(57,255,20,.08);
-      --ok:#34d399; --error:#f87171;
-    }
-    body{ background:var(--bg); color:var(--text); }
-    .card{ background:var(--card); border:1px solid var(--ring); }
-    .btn-primary{
-      background:var(--accent); color:#fff; font-weight:700;
-      transition:all .2s; box-shadow:0 6px 16px rgba(0,0,0,.08);
-    }
-    html[data-theme="dark"] .btn-primary{ color:#0b1220; }
-    .btn-primary:hover{ filter:brightness(.93) }
-    .btn-ghost{ border:1px solid var(--ring); background:transparent; }
-    .chip{ background:var(--accent-weak); color:var(--accent); border:1px solid var(--ring); }
-    .dashed{ border:2px dashed var(--accent) }
-    .progressbar{ background:var(--accent); height:10px; width:0%; border-radius:8px; transition:width .35s linear; }
-    .shadow-soft{ box-shadow:0 10px 30px rgba(0,0,0,.08); }
-    .shadow-strong{ box-shadow:0 18px 48px rgba(0,0,0,.18); }
-    .mono{ font-family: ui-monospace,SFMono-Regular,Menlo,monospace; }
-    .link{ color:var(--accent); text-decoration:underline; }
-    .hidden{ display:none; }
-
-    /* Inputs soft-focus elevation */
-    .input-like, .textarea-like, .select-like { background: transparent; border: 1px solid var(--ring); }
-    .input-like:focus, .textarea-like:focus, .select-like:focus {
-      outline: none; box-shadow: 0 0 0 3px var(--accent-weak), 0 10px 24px rgba(0,0,0,.12); border-color: var(--accent);
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
-      background: var(--card); color: var(--text);
-      border: 1px solid var(--ring); border-radius: 10px; padding: 10px 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.18); font-size: 14px; z-index: 70;
-    }
-
-    /* Modal */
-    .modal-mask {
-      position: fixed; inset:0; background: rgba(0,0,0,.45); backdrop-filter: blur(2px);
-      display:none; align-items:center; justify-content:center; z-index:90;
-    }
-    .modal { max-width:560px; width:100%; }
-    .modal-mask.show{ display:flex; }
-  </style>
-
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"SoftwareApplication",
-    "name":"PulseMotionHub",
-    "applicationCategory":"MultimediaApplication",
-    "operatingSystem":"Web",
-    "url":"https://pulsemotionhub-video-app.onrender.com/",
-    "offers":{ "@type":"Offer", "priceCurrency":"USD", "price":"0.00" }
-  }
-  </script>
-
-  <!-- Minimal analytics & toast -->
-  <script>
-    window.pmTrack = (ev, data={})=>{ try{ console.log('[PMH]', ev, data); }catch(e){} };
-    function toast(msg, ms=2500){
-      const t = document.getElementById('toast'); if(!t) return;
-      t.textContent = msg; t.classList.remove('hidden');
-      clearTimeout(t._hide); t._hide = setTimeout(()=> t.classList.add('hidden'), ms);
-    }
-  </script>
+  <meta charset="UTF-8" />
+  <title>PulseMotionHub – Image to Video in Seconds</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen">
+<body>
+  <!-- Top Nav -->
+  <header class="pmh-header">
+    <div class="pmh-container pmh-header-inner">
+      <div class="pmh-logo">
+        <span class="pmh-logo-icon">⚡</span>
+        <span class="pmh-logo-text">
+          <span class="pmh-logo-strong">PULSE</span>MOTIONHUB
+        </span>
+      </div>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/70 card border-0">
-    <div class="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2 font-extrabold text-xl">
-        <i data-lucide="zap" class="w-5 h-5 text-[var(--accent)]"></i>
-        <span>PULSE<span class="text-[var(--accent)]">MOTION</span>HUB</span>
-      </a>
-
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#tool" class="hover:opacity-80">Generator</a>
-        <a href="#pricing" class="hover:opacity-80">Pricing</a>
-        <a href="#faq" class="hover:opacity-80">FAQ</a>
-        <button id="paymentsNav" class="hover:opacity-80">Payments</button>
+      <nav class="pmh-nav">
+        <a href="#generator" class="pmh-nav-link">Generator</a>
+        <a href="#pricing" class="pmh-nav-link">Pricing</a>
+        <a href="#faq" class="pmh-nav-link">FAQ</a>
+        <a href="#payments" class="pmh-nav-link">Payments</a>
       </nav>
 
-      <div class="flex items-center gap-2">
-        <button id="themeToggle" class="btn-ghost rounded-lg px-3 py-2 text-sm flex items-center gap-2">
-          <i data-lucide="moon-star" class="w-4 h-4"></i><span>Dark</span>
+      <div class="pmh-header-actions">
+        <button id="getCreditsBtn" class="pmh-btn pmh-btn-outline">
+          Get Credits
         </button>
-        <a href="#pricing" class="btn-primary rounded-lg px-4 py-2 text-sm">Get Credits</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="max-w-7xl mx-auto px-4 md:px-8 pt-10 md:pt-14">
-    <div class="grid md:grid-cols-2 gap-8 items-center">
-      <div>
-        <div class="inline-flex items-center gap-2 chip px-2 py-1 rounded-full text-xs mb-4">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Image → Video in Seconds
-        </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-          Turn Images into <span class="text-[var(--accent)]">Cinematic</span> Videos
-        </h1>
-        <p class="mt-4" style="color:var(--muted)">
-          Upload an image or paste a URL, describe the motion, and get a shareable video. Built for creators, marketers, and studios.
-        </p>
-        <div class="mt-6 flex gap-3">
-          <a href="#tool" class="btn-primary rounded-lg px-5 py-3">Try the Generator</a>
-          <button id="openPayments" class="btn-ghost rounded-lg px-5 py-3">See Payment Options</button>
-        </div>
-        <p class="mt-3 text-xs" style="color:var(--muted)">Commercial use allowed. Content policy applies.</p>
-      </div>
-      <div class="card shadow-strong rounded-xl p-4">
-        <video class="w-full rounded-lg" autoplay muted loop playsinline>
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
-        </video>
-      </div>
-    </div>
-  </section>
+  <!-- Global status / toast -->
+  <div id="globalMessage" class="pmh-toast" hidden></div>
 
-  <!-- Tool -->
-  <section id="tool" class="max-w-7xl mx-auto px-4 md:px-8 py-10">
-    <div class="grid lg:grid-cols-3 gap-8">
-      <!-- Inputs -->
-      <div class="lg:col-span-1 card rounded-xl p-6 shadow-soft">
-        <h2 class="text-xl font-bold mb-1">1) Source & Motion</h2>
-        <p class="text-sm mb-4" style="color:var(--muted)">Use an image URL or upload a file.</p>
-
-        <!-- Image URL -->
-        <label class="block text-sm font-semibold mb-1">Image URL (optional)</label>
-        <input id="image-url" type="url" placeholder="https://example.com/image.jpg"
-               class="w-full rounded-lg px-3 py-2 mb-4 input-like focus:outline-none"/>
-
-        <!-- Upload -->
-        <div id="drop-area" class="rounded-xl dashed p-5 mb-4 text-center cursor-pointer">
-          <input id="image-upload" type="file" accept="image/*" class="hidden"/>
-          <p id="drop-text" class="text-sm">
-            Drag & drop, or <span class="underline">click to upload</span>.
+  <main>
+    <!-- Hero -->
+    <section class="pmh-hero">
+      <div class="pmh-container pmh-hero-grid">
+        <div class="pmh-hero-copy">
+          <div class="pmh-pill">Image → Video in Seconds</div>
+          <h1>Turn Images into <span class="pmh-text-gradient">Cinematic Videos</span></h1>
+          <p class="pmh-hero-text">
+            Upload an image or paste a URL, describe the motion, and PulseMotionHub
+            will return a smooth, ready-to-share video clip.
           </p>
-          <img id="image-preview" alt="Preview" class="hidden mx-auto mt-3 max-h-40 rounded"/>
+
+          <div class="pmh-hero-actions">
+            <button id="heroGeneratorBtn" class="pmh-btn pmh-btn-primary">
+              Try the Generator
+            </button>
+            <button id="heroPricingBtn" class="pmh-btn pmh-btn-ghost">
+              See Payment Options
+            </button>
+          </div>
+
+          <p class="pmh-hero-footnote">
+            Commercial use allowed. Content policy applies.
+          </p>
         </div>
 
-        <!-- Prompt -->
-        <label class="block text-sm font-semibold mb-1">Motion Prompt</label>
-        <textarea id="prompt" rows="3" placeholder="Slow orbit around subject, soft morning light, gentle parallax…"
-          class="w-full rounded-lg px-3 py-2 mb-4 textarea-like focus:outline-none"></textarea>
+        <div class="pmh-hero-preview">
+          <div class="pmh-hero-video-frame">
+            <video
+              src="https://www.w3schools.com/html/mov_bbb.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+            ></video>
+          </div>
+          <p class="pmh-hero-caption">
+            Example clip – your generated video will appear in the Result panel below.
+          </p>
+        </div>
+      </div>
+    </section>
 
-        <div class="grid grid-cols-2 gap-3 mb-4">
+    <!-- Generator -->
+    <section id="generator" class="pmh-section pmh-section-alt">
+      <div class="pmh-container">
+        <h2>1) Generate Your Video</h2>
+        <p class="pmh-section-subtitle">
+          Choose an image, describe the motion, and we’ll handle the rest.
+        </p>
+
+        <div class="pmh-grid-2">
+          <!-- Left: Controls -->
+          <div class="pmh-card">
+            <h3>Source &amp; Motion</h3>
+
+            <label class="pmh-field">
+              <span class="pmh-label">Image file (recommended)</span>
+              <input type="file" id="imageFile" accept="image/*" />
+              <span class="pmh-help">
+                We’ll never store your uploads long-term – they’re used only to create your video.
+              </span>
+            </label>
+
+            <div class="pmh-field-separator">
+              <span>or</span>
+            </div>
+
+            <label class="pmh-field">
+              <span class="pmh-label">Image URL (optional)</span>
+              <input
+                type="url"
+                id="imageUrl"
+                placeholder="https://example.com/your-image.jpg"
+              />
+            </label>
+
+            <label class="pmh-field">
+              <span class="pmh-label">Motion prompt</span>
+              <textarea
+                id="prompt"
+                rows="4"
+                placeholder="Example: Slow zoom-in on her face while the camera gently tilts upward…"
+              ></textarea>
+            </label>
+
+            <label class="pmh-field">
+              <div class="pmh-label-row">
+                <span class="pmh-label">Duration (seconds)</span>
+                <span id="durationValue" class="pmh-label-muted">5s</span>
+              </div>
+              <input
+                type="range"
+                id="duration"
+                min="3"
+                max="10"
+                step="1"
+                value="5"
+              />
+            </label>
+
+            <button id="generateBtn" class="pmh-btn pmh-btn-primary pmh-btn-full">
+              Generate Video
+            </button>
+
+            <p class="pmh-footnote">
+              NSFW or policy-violating content will be rejected by the model provider.
+            </p>
+          </div>
+
+          <!-- Right: Result -->
+          <div class="pmh-card">
+            <h3>Result</h3>
+            <p id="statusText" class="pmh-status-text">
+              Your video will appear here after processing.
+            </p>
+
+            <div id="spinner" class="pmh-spinner" hidden></div>
+
+            <div id="resultContainer" class="pmh-result" hidden>
+              <video
+                id="resultVideo"
+                controls
+                playsinline
+              ></video>
+
+              <div class="pmh-result-actions">
+                <a id="downloadLink" href="#" download class="pmh-btn pmh-btn-outline">
+                  Download MP4
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pmh-section">
+      <div class="pmh-container">
+        <h2>2) Choose a Plan</h2>
+        <p class="pmh-section-subtitle">
+          Start with one-time credits or scale with monthly creator plans.
+        </p>
+
+        <div class="pmh-pricing-grid">
+          <!-- Starter -->
+          <article class="pmh-card pmh-plan">
+            <h3>Starter Credits</h3>
+            <p class="pmh-plan-price">$9.99</p>
+            <p class="pmh-plan-tagline">Perfect for trying the platform</p>
+            <ul class="pmh-plan-list">
+              <li>Pay once, use anytime</li>
+              <li>Great for small batches of videos</li>
+              <li>Email support</li>
+            </ul>
+            <div class="pmh-plan-actions">
+              <button
+                class="pmh-btn pmh-btn-primary pmh-btn-full"
+                data-stripe-plan="starter"
+              >
+                Card / Apple Pay (Stripe)
+              </button>
+              <button
+                class="pmh-btn pmh-btn-ghost pmh-btn-full"
+                data-paypal-plan="starter"
+              >
+                Pay with PayPal
+              </button>
+            </div>
+          </article>
+
+          <!-- Creator monthly -->
+          <article class="pmh-card pmh-plan pmh-plan-featured">
+            <div class="pmh-plan-badge">Most Popular</div>
+            <h3>Creator Monthly</h3>
+            <p class="pmh-plan-price">$19.99<span>/mo</span></p>
+            <p class="pmh-plan-tagline">For active creators &amp; marketers</p>
+            <ul class="pmh-plan-list">
+              <li>Automatically renews every month</li>
+              <li>Priority generation queue</li>
+              <li>Email + priority chat support</li>
+            </ul>
+            <div class="pmh-plan-actions">
+              <button
+                class="pmh-btn pmh-btn-primary pmh-btn-full"
+                data-stripe-plan="creator-monthly"
+              >
+                Card / Apple Pay (Stripe)
+              </button>
+              <button
+                class="pmh-btn pmh-btn-ghost pmh-btn-full"
+                data-paypal-plan="creator-monthly"
+              >
+                Pay with PayPal
+              </button>
+            </div>
+          </article>
+
+          <!-- Pro Studio -->
+          <article class="pmh-card pmh-plan">
+            <h3>Pro Studio</h3>
+            <p class="pmh-plan-price">$39.99</p>
+            <p class="pmh-plan-tagline">Best for agencies &amp; studios</p>
+            <ul class="pmh-plan-list">
+              <li>Higher limits &amp; advanced usage</li>
+              <li>Team-friendly workflows</li>
+              <li>Priority support &amp; onboarding</li>
+            </ul>
+            <div class="pmh-plan-actions">
+              <button
+                class="pmh-btn pmh-btn-primary pmh-btn-full"
+                data-stripe-plan="pro-studio"
+              >
+                Card / Apple Pay (Stripe)
+              </button>
+              <button
+                class="pmh-btn pmh-btn-ghost pmh-btn-full"
+                data-paypal-plan="pro-studio"
+              >
+                Pay with PayPal
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payments section -->
+    <section id="payments" class="pmh-section pmh-section-alt">
+      <div class="pmh-container">
+        <h2>3) Payment Methods</h2>
+        <p class="pmh-section-subtitle">
+          We use trusted payment providers so your card details stay safe.
+        </p>
+
+        <div class="pmh-grid-2">
           <div>
-            <label class="block text-sm font-semibold mb-1">Quality</label>
-            <select id="tier" class="w-full rounded-lg px-3 py-2 select-like">
-              <option value="standard" selected>Standard (Best value)</option>
-              <option value="premium" disabled>Premium (Coming soon)</option>
-            </select>
+            <h3>Stripe Checkout</h3>
+            <p>
+              Use debit/credit cards plus wallets like Apple&nbsp;Pay, Google&nbsp;Pay,
+              Link, and Cash App Pay where supported. All card data goes
+              straight to Stripe – PulseMotionHub never sees it.
+            </p>
           </div>
           <div>
-            <label class="block text-sm font-semibold mb-1">Duration</label>
-            <select id="duration" class="w-full rounded-lg px-3 py-2 select-like">
-              <option value="5" selected>~5s</option>
-              <option value="8">~8s</option>
-              <option value="10">~10s</option>
-            </select>
-          </div>
-        </div>
-
-        <button id="generate-btn" class="btn-primary w-full rounded-lg py-3 disabled:opacity-60" disabled>
-          <i data-lucide="wand-2" class="w-4 h-4 inline-block mr-2"></i> Generate Video
-        </button>
-
-        <p class="mt-3 text-xs" style="color:var(--muted)">By generating you agree to our <a href="#faq" class="link">Terms & Content Policy</a>.</p>
-      </div>
-
-      <!-- Output -->
-      <div class="lg:col-span-2 card rounded-xl p-6 shadow-soft">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold">2) Result</h3>
-          <span id="status-text" class="text-sm" style="color:var(--muted)" aria-live="polite">Ready.</span>
-        </div>
-
-        <div id="progress-wrap" class="mt-4 hidden">
-          <div class="w-full" style="background:var(--ring); border-radius:10px; overflow:hidden;">
-            <div id="progress-bar" class="progressbar"></div>
-          </div>
-        </div>
-
-        <div id="result" class="mt-5 rounded-lg" style="border:1px solid var(--ring); background:var(--card); padding:1rem;">
-          <div id="placeholder" class="text-sm" style="color:var(--muted)">
-            // Your video will appear here after processing.
+            <h3>PayPal</h3>
+            <p>
+              Prefer PayPal? No problem. Choose the PayPal button on your plan
+              and you’ll be redirected to a secure PayPal approval screen.
+            </p>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Pricing -->
-  <section id="pricing" class="max-w-7xl mx-auto px-4 md:px-8 py-12">
-    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-3">Simple, Creator-Friendly Pricing</h2>
-    <p class="text-center mb-10" style="color:var(--muted)">Start small, scale up as you grow. Only pay for what you use.</p>
+    <!-- FAQ -->
+    <section id="faq" class="pmh-section">
+      <div class="pmh-container">
+        <h2>Frequently Asked Questions</h2>
 
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="card rounded-xl p-6 shadow-soft">
-        <h3 class="text-xl font-bold">Starter Credits</h3>
-        <p class="text-sm" style="color:var(--muted)">Pay-as-you-go.</p>
-        <div class="text-4xl font-extrabold mt-3">$9.99</div>
-        <p class="text-sm mt-1">~10 Standard clips</p>
-        <ul class="mt-4 text-sm space-y-2">
-          <li>• Kling v2.1 Standard</li>
-          <li>• 720–1080p</li>
-          <li>• Commercial use</li>
-        </ul>
-        <div class="grid grid-cols-1 gap-2 mt-6">
-          <button class="btn-primary w-full rounded-lg py-2" data-plan="starter">Buy Credits</button>
-          <button class="btn-ghost w-full rounded-lg py-2" data-plan="starter" data-pay="paypal">Pay with PayPal</button>
-          <button class="btn-ghost w-full rounded-lg py-2" data-plan="starter" data-pay="crypto">Pay with Crypto</button>
+        <div class="pmh-faq">
+          <details>
+            <summary>Can I use the videos commercially?</summary>
+            <p>
+              Yes – as long as your prompts follow the content policy,
+              generated clips can be used for client work, social media, ads,
+              and more.
+            </p>
+          </details>
+
+          <details>
+            <summary>How long does a generation take?</summary>
+            <p>
+              Most clips are ready in under a minute, depending on queue and
+              provider load.
+            </p>
+          </details>
+
+          <details>
+            <summary>Will you add more models &amp; providers?</summary>
+            <p>
+              Yes. PulseMotionHub is designed so we can plug in new AI
+              video providers over time while you keep the same simple
+              workflow.
+            </p>
+          </details>
         </div>
       </div>
+    </section>
+  </main>
 
-      <div class="card rounded-xl p-6 shadow-soft" style="box-shadow:0 0 0 2px var(--accent) inset;">
-        <div class="chip inline-block px-2 py-1 rounded-full text-xs mb-3">Best Value</div>
-        <h3 class="text-xl font-bold">Creator Monthly</h3>
-        <p class="text-sm" style="color:var(--muted)">For consistent posting.</p>
-        <div class="text-4xl font-extrabold mt-3">$19.99</div>
-        <p class="text-sm mt-1">25 Standard clips + rollover</p>
-        <ul class="mt-4 text-sm space-y-2">
-          <li>• Priority queue</li>
-          <li>• Rollover unused credits</li>
-          <li>• Optional Premium upcharge</li>
-        </ul>
-        <div class="grid grid-cols-1 gap-2 mt-6">
-          <button class="btn-primary w-full rounded-lg py-2" data-plan="creator-monthly">Subscribe (Stripe)</button>
-          <button class="btn-ghost w-full rounded-lg py-2" data-plan="creator-monthly" data-pay="paypal">Subscribe with PayPal</button>
-        </div>
-      </div>
-
-      <div class="card rounded-xl p-6 shadow-soft">
-        <h3 class="text-xl font-bold">Pro Studio</h3>
-        <p class="text-sm" style="color:var(--muted)">For agencies & teams.</p>
-        <div class="text-4xl font-extrabold mt-3">$39.99</div>
-        <p class="text-sm mt-1">10 Premium clips (or 40 Standard)</p>
-        <ul class="mt-4 text-sm space-y-2">
-          <li>• Premium models</li>
-          <li>• Team seats (soon)</li>
-          <li>• Priority support</li>
-        </ul>
-        <div class="grid grid-cols-1 gap-2 mt-6">
-          <button class="btn-primary w-full rounded-lg py-2" data-plan="pro-studio">Go Pro (Stripe)</button>
-          <button class="btn-ghost w-full rounded-lg py-2" data-plan="pro-studio" data-pay="paypal">Pay with PayPal</button>
-          <button class="btn-ghost w-full rounded-lg py-2" data-plan="pro-studio" data-pay="crypto">Pay with Crypto</button>
-        </div>
-      </div>
-    </div>
-
-    <p class="text-xs text-center mt-6" style="color:var(--muted)">Introductory pricing. Premium unlocks higher-fidelity providers as available.</p>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="max-w-4xl mx-auto px-4 md:px-8 py-10">
-    <h3 class="text-2xl font-extrabold mb-6">FAQ</h3>
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="card rounded-xl p-5">
-        <h4 class="font-semibold">What image types are supported?</h4>
-        <p class="text-sm mt-2" style="color:var(--muted)">PNG, JPG, and WEBP. Paste a URL or upload directly.</p>
-      </div>
-      <div class="card rounded-xl p-5">
-        <h4 class="font-semibold">How long are the clips?</h4>
-        <p class="text-sm mt-2" style="color:var(--muted)">Most clips are 5–10 seconds. Longer clips may cost more and take longer to render.</p>
-      </div>
-      <div class="card rounded-xl p-5">
-        <h4 class="font-semibold">Commercial usage?</h4>
-        <p class="text-sm mt-2" style="color:var(--muted)">Yes, see our terms. Some providers have additional restrictions.</p>
-      </div>
-      <div class="card rounded-xl p-5">
-        <h4 class="font-semibold">Refunds?</h4>
-        <p class="text-sm mt-2" style="color:var(--muted)">Credits are non-refundable but never expire. Contact us if something breaks.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="mt-10 py-10" style="border-top:1px solid var(--ring);">
-    <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-4 md:items-center md:justify-between text-sm">
-      <div class="flex items-center gap-2">
-        <i data-lucide="zap" class="w-4 h-4 text-[var(--accent)]"></i>
-        <span class="font-semibold">PulseMotionHub</span>
-      </div>
-      <div class="flex items-center gap-4" style="color:var(--muted)">
-        <a href="#" class="hover:opacity-80">Privacy</a>
-        <a href="#" class="hover:opacity-80">Terms</a>
-        <span>© <span id="year"></span> PulseMotionHub</span>
-      </div>
+  <footer class="pmh-footer">
+    <div class="pmh-container pmh-footer-inner">
+      <span>© <span id="year"></span> PulseMotionHub. All rights reserved.</span>
+      <span class="pmh-footer-links">
+        <a href="#generator">Generator</a>
+        <a href="#pricing">Pricing</a>
+      </span>
     </div>
   </footer>
 
-  <!-- Payments Modal -->
-  <div id="paymentsModal" class="modal-mask">
-    <div class="modal card rounded-xl p-6 shadow-strong">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-bold">Choose a Payment Method</h3>
-        <button id="closePayments" class="btn-ghost rounded-lg px-2 py-1"><i data-lucide="x" class="w-4 h-4"></i></button>
-      </div>
-      <p class="text-sm mb-4" style="color:var(--muted)">We accept Cards, Apple Pay/Google Pay, Link, Cash App Pay (via Stripe), PayPal, and optional Crypto.</p>
-
-      <div class="grid md:grid-cols-3 gap-3">
-        <button class="btn-primary rounded-lg py-2" data-pay="stripe" data-plan="starter">Stripe — Starter</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="paypal" data-plan="starter">PayPal — Starter</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="crypto" data-plan="starter">Crypto — Starter</button>
-
-        <button class="btn-primary rounded-lg py-2" data-pay="stripe" data-plan="creator-monthly">Stripe — Creator Monthly</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="paypal" data-plan="creator-monthly">PayPal — Creator Monthly</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="crypto" data-plan="creator-monthly">Crypto — Creator</button>
-
-        <button class="btn-primary rounded-lg py-2" data-pay="stripe" data-plan="pro-studio">Stripe — Pro Studio</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="paypal" data-plan="pro-studio">PayPal — Pro Studio</button>
-        <button class="btn-ghost rounded-lg py-2" data-pay="crypto" data-plan="pro-studio">Crypto — Pro</button>
-      </div>
-
-      <p class="text-xs mt-4" style="color:var(--muted)">Note: Apple Pay/Google Pay, Cash App Pay, and Link appear automatically in the Stripe checkout if eligible.</p>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-
-  <!-- App JS -->
-  <script>
-    // Theme toggle (persist)
-    const themeToggle = document.getElementById('themeToggle');
-    const savedTheme = localStorage.getItem('pmh_theme');
-    if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); }
-    themeToggle?.addEventListener('click', ()=>{
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      localStorage.setItem('pmh_theme', isDark ? 'light' : 'dark');
-      if (window.lucide) window.lucide.createIcons();
-    });
-
-    // Year + Icons
-    document.getElementById('year').textContent = new Date().getFullYear();
-    window.addEventListener('DOMContentLoaded', ()=> { if (window.lucide) window.lucide.createIcons(); });
-
-    // Elements
-    const dropArea = document.getElementById('drop-area');
-    const imageUpload = document.getElementById('image-upload');
-    const imagePreview = document.getElementById('image-preview');
-    const imageUrlInput = document.getElementById('image-url');
-    const generateBtn = document.getElementById('generate-btn');
-    const promptInput = document.getElementById('prompt');
-    const statusText = document.getElementById('status-text');
-    const progressWrap = document.getElementById('progress-wrap');
-    const progressBar = document.getElementById('progress-bar');
-    const placeholder = document.getElementById('placeholder');
-    const tierSelect = document.getElementById('tier');
-    const durationSelect = document.getElementById('duration');
-
-    // Payments UI
-    const paymentsModal = document.getElementById('paymentsModal');
-    const openPayments = document.getElementById('openPayments');
-    const closePayments = document.getElementById('closePayments');
-    const paymentsNav = document.getElementById('paymentsNav');
-
-    openPayments?.addEventListener('click', ()=> paymentsModal.classList.add('show'));
-    paymentsNav?.addEventListener('click', ()=> paymentsModal.classList.add('show'));
-    closePayments?.addEventListener('click', ()=> paymentsModal.classList.remove('show'));
-    paymentsModal?.addEventListener('click', (e)=>{ if(e.target===paymentsModal) paymentsModal.classList.remove('show'); });
-
-    let base64Image = null, mimeType = null;
-
-    // Central status helper
-    function setStatus(kind, msg){
-      statusText.textContent = msg;
-      if (kind === 'error') statusText.style.color = 'var(--error)';
-      else if (kind === 'ok') statusText.style.color = 'var(--ok)';
-      else statusText.style.color = 'var(--muted)';
-    }
-
-    function ready(){
-      const hasUrl = imageUrlInput.value.trim().startsWith('http');
-      const hasUpload = base64Image && mimeType;
-      const hasPrompt = promptInput.value.trim().length > 0;
-      return (hasUrl || hasUpload) && hasPrompt;
-    }
-    function updateBtn(){ generateBtn.disabled = !ready(); }
-
-    // Reset status on interactions
-    function resetStatusIfError(){ setStatus('info','Ready.'); }
-    ['input','change'].forEach(evt=>{
-      promptInput.addEventListener(evt, resetStatusIfError);
-      imageUrlInput.addEventListener(evt, resetStatusIfError);
-      imageUpload.addEventListener(evt, resetStatusIfError);
-      tierSelect.addEventListener(evt, resetStatusIfError);
-      durationSelect.addEventListener(evt, resetStatusIfError);
-    });
-
-    // File handling
-    function handleFile(file){
-      if(!file || !file.type.startsWith('image/')){
-        setStatus('error','Please choose a valid image file (png/jpg/webp).'); toast('Invalid image file'); return;
-      }
-      const MAX_MB = 12;
-      if(file.size > MAX_MB*1024*1024){
-        setStatus('error',`Image too large. Max ${MAX_MB}MB.`); toast(`Image too large (>${MAX_MB}MB)`); return;
-      }
-      const r = new FileReader();
-      r.onload = e=>{
-        imagePreview.src = e.target.result;
-        imagePreview.classList.remove('hidden');
-        document.getElementById('drop-text').classList.add('hidden');
-        const [type, data] = e.target.result.split(',');
-        mimeType = type.split(':')[1].split(';')[0];
-        base64Image = data;
-        updateBtn();
-        setStatus('ok',`Loaded: ${file.name}`);
-      };
-      r.readAsDataURL(file);
-    }
-
-    // Upload events
-    dropArea.addEventListener('click', ()=> imageUpload.click());
-    imageUpload.addEventListener('change', e=> handleFile(e.target.files[0]));
-    ['dragenter','dragover','dragleave','drop'].forEach(ev=>{
-      dropArea.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); });
-    });
-    dropArea.addEventListener('dragenter', ()=> dropArea.classList.add('dashed'));
-    dropArea.addEventListener('dragleave', ()=> dropArea.classList.remove('dashed'));
-    dropArea.addEventListener('drop', e=>{
-      const f = e.dataTransfer.files?.[0]; if(f) handleFile(f);
-      dropArea.classList.remove('dashed');
-    });
-
-    // Debounced URL validation (HEAD)
-    let urlCheckTimer;
-    async function validateUrl(){
-      const url = imageUrlInput.value.trim();
-      if(!url) return;
-      try{
-        setStatus('info','Validating image URL…');
-        const head = await fetch(url, { method: 'HEAD' });
-        const type = head.headers.get('content-type') || '';
-        if(!head.ok || !type.startsWith('image/')){
-          setStatus('error','That URL does not look like an image.'); toast('URL is not an image');
-        } else {
-          setStatus('ok','Image URL looks good.');
-        }
-      }catch{
-        setStatus('error','Could not validate URL.'); toast('Could not reach image URL');
-      }
-    }
-    imageUrlInput.addEventListener('blur', validateUrl);
-    imageUrlInput.addEventListener('input', ()=>{
-      updateBtn();
-      clearTimeout(urlCheckTimer);
-      urlCheckTimer = setTimeout(validateUrl, 500);
-    });
-
-    promptInput.addEventListener('input', updateBtn);
-
-    // Generate
-    generateBtn.addEventListener('click', async ()=>{
-      if(!ready()) return;
-
-      pmTrack('generate_clicked', { tier:tierSelect.value, duration:durationSelect.value });
-
-      generateBtn.disabled = true;
-      progressWrap.classList.remove('hidden');
-      progressBar.style.width = '10%';
-      setStatus('info','Contacting server…');
-      placeholder.classList.add('mono');
-      placeholder.textContent = '// Sending request to AI server…';
-
-      const payload = { prompt: promptInput.value.trim(), duration: durationSelect.value };
-      if(imageUrlInput.value.trim().startsWith('http')){
-        payload.imageUrl = imageUrlInput.value.trim();
-      }else{
-        payload.image = base64Image; payload.mimeType = mimeType;
-      }
-
-      const id = setInterval(()=>{
-        const w = parseInt(progressBar.style.width);
-        if(w < 90){
-          const next = Math.min(90, w+5);
-          progressBar.style.width = next + '%';
-          setStatus('info',`Processing… ${next}%`);
-        }
-      }, 400);
-
-      try{
-        const res = await fetch(`/api/generate-video?tier=${encodeURIComponent(tierSelect.value)}`, {
-          method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
-        });
-        const data = await res.json().catch(()=> ({}));
-
-        clearInterval(id);
-        progressBar.style.width = '100%';
-
-        if(!res.ok){ throw new Error(data?.error || res.statusText); }
-
-        if(data.videoUrl){
-          placeholder.classList.remove('mono');
-          placeholder.innerHTML = `
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-sm" style="color:var(--muted)">Result</div>
-              <a href="${data.videoUrl}" target="_blank" class="link text-sm">Open in new tab</a>
-            </div>
-            <video controls class="w-full rounded-lg" style="border:1px solid var(--ring);">
-              <source src="${data.videoUrl}" type="${data.contentType || 'video/mp4'}" />
-            </video>
-          `;
-          setStatus('ok','✅ Done.');
-          pmTrack('video_succeeded', { bytes:data.file_size || null });
-        }else{
-          throw new Error('No video URL returned.');
-        }
-      }catch(err){
-        clearInterval(id);
-        setStatus('error','❌ Failed.');
-        placeholder.classList.add('mono');
-        placeholder.textContent = `// ERROR: ${err.message || err}`;
-        pmTrack('video_failed', { reason:String(err) });
-        toast('Generation failed. Check inputs or try again.');
-      }finally{
-        setTimeout(()=> progressWrap.classList.add('hidden'), 1600);
-        generateBtn.disabled = false;
-      }
-    });
-
-    // Payment button handlers (Pricing cards & Modal)
-    function getPlanFromBtn(btn){
-      return btn.getAttribute('data-plan') || 'starter';
-    }
-    async function startStripe(plan){
-      try{
-        const res = await fetch(`/api/checkout/stripe/session?plan=${encodeURIComponent(plan)}`, { method:'POST' });
-        const data = await res.json();
-        if(!res.ok) throw new Error(data.error || 'Stripe session error');
-        window.location.href = data.url; // redirect to Stripe Checkout
-      }catch(e){
-        toast('Stripe Checkout failed'); console.error(e);
-      }
-    }
-    async function startPayPal(plan){
-      try{
-        const res = await fetch(`/api/checkout/paypal/create?plan=${encodeURIComponent(plan)}`, { method:'POST' });
-        const data = await res.json();
-        if(!res.ok) throw new Error(data.error || 'PayPal order error');
-        window.location.href = data.approvalUrl; // redirect to PayPal approval
-      }catch(e){
-        toast('PayPal Checkout failed'); console.error(e);
-      }
-    }
-    async function startCrypto(plan){
-      try{
-        const res = await fetch(`/api/checkout/coinbase/charge?plan=${encodeURIComponent(plan)}`, { method:'POST' });
-        const data = await res.json();
-        if(!res.ok) throw new Error(data.error || 'Crypto charge error');
-        window.location.href = data.hosted_url; // redirect to Coinbase Commerce
-      }catch(e){
-        toast('Crypto Checkout failed'); console.error(e);
-      }
-    }
-
-    // Bind buttons
-    document.querySelectorAll('[data-plan]:not([data-pay])').forEach(btn=>{
-      btn.addEventListener('click', ()=> startStripe(getPlanFromBtn(btn)));
-    });
-    document.querySelectorAll('[data-pay="paypal"]').forEach(btn=>{
-      btn.addEventListener('click', ()=> startPayPal(getPlanFromBtn(btn)));
-    });
-    document.querySelectorAll('[data-pay="crypto"]').forEach(btn=>{
-      btn.addEventListener('click', ()=> startCrypto(getPlanFromBtn(btn)));
-    });
-    // Modal’s quick buttons also have data-pay + data-plan: handled above
-  </script>
+  <script src="app.js" defer></script>
 </body>
 </html>
