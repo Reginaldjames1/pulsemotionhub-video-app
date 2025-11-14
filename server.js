@@ -1,31 +1,30 @@
-// server.js — PulseMotionHub backend (Express on Render)
-// Features: Static hosting, Image→Video proxy (placeholder),
-// Stripe / PayPal / Coinbase Commerce checkout + webhooks
+// server.js
+// PulseMotionHub backend: Stripe + PayPal checkout
 
-import express from 'express';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import Stripe from 'stripe';
-import crypto from 'crypto'; // for Coinbase Commerce signature verify
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
+require('dotenv').config(); // Local dev .env (Render uses dashboard env vars)
 
-dotenv.config();
+const express = require('express');
+const path = require('path');
+const Stripe = require('stripe');
 
-// ---------- ENVIRONMENT VARIABLES ----------
+const app = express();
+
+// ------------------ ENVIRONMENT VARIABLES ------------------
+
 const {
-  PORT = 8080,
+  PORT = 10000,                 // Render detects the port anyway; 10000 is fine
   NODE_ENV = 'production',
-  STABILITY_API_KEY,                // optional for video generation provider
 
   // ----- STRIPE -----
   STRIPE_SECRET_KEY,
-  STRIPE_PRICE_STARTER,              // preferred name
-  STRIPE_PRICE_STARTER_CREDITS,      // legacy / alt name (Render env likely uses this)
-  STRIPE_PRICE_CREATOR_MONTHLY,
-  STRIPE_PRICE_PRO_STUDIO,
+
+  // Price IDs
+  STRIPE_PRICE_STARTER,          // one-time Starter Credits
+  STRIPE_PRICE_STARTER_CREDITS,  // optional newer name
+  STRIPE_PRICE_CREATOR_MONTHLY,  // recurring
+  STRIPE_PRICE_PRO_STUDIO,       // recurring
+
+  // Optional: Stripe webhook (not used yet)
   STRIPE_WEBHOOK_SECRET,
 
   // ----- PAYPAL -----
@@ -33,335 +32,317 @@ const {
   PAYPAL_CLIENT_SECRET,
   PAYPAL_ENV = 'sandbox', // 'sandbox' or 'live'
 
-  // ----- COINBASE COMMERCE -----
-  COINBASE_COMMERCE_API_KEY,
-  COINBASE_WEBHOOK_SECRET,
-
-  // ----- APP -----
-  PUBLIC_BASE_URL = 'https://pulsemotionhub-video-app.onrender.com'
+  // Optional: app base URL override (otherwise we derive from request)
+  APP_BASE_URL
 } = process.env;
 
-// normalize starter price env var so either name works
-const PRICE_STARTER = STRIPE_PRICE_STARTER || STRIPE_PRICE_STARTER_CREDITS;
-
-// ---------- SETUP ----------
-const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(cors({ origin: true, credentials: false }));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use((req, _res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
-
-// ---------- VIDEO GENERATION PLACEHOLDER ----------
-app.post('/api/generate-video', async (req, res) => {
-  try {
-    const { prompt, image, imageUrl, mimeType, duration = 5 } = req.body;
-    if (!prompt || (!image && !imageUrl)) {
-      return res.status(400).json({ error: 'Missing prompt and image or imageUrl.' });
-    }
-
-    // TODO: Replace with actual AI generation logic (fal.ai, Kling, Stability, etc.)
-    const videoUrl = 'https://www.w3schools.com/html/mov_bbb.mp4';
-    return res.status(200).json({
-      videoUrl,
-      contentType: 'video/mp4',
-      file_size: null
-    });
-  } catch (err) {
-    console.error('Generate error:', err);
-    res.status(500).json({ error: 'Internal Server Error.' });
-  }
-});
-
-// ---------- STRIPE CHECKOUT ----------
-const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
-
-// Accept multiple aliases for each plan
-function stripePriceForPlan(rawPlan) {
-  const plan = (rawPlan || '').toLowerCase().trim();
-  console.log('Stripe checkout requested for plan:', plan);
-
-  switch (plan) {
-    case 'starter':
-    case 'starter-credits':
-    case 'starter_credit':
-    case 'credits':
-      return PRICE_STARTER;
-
-    case 'creator-monthly':
-    case 'creator_monthly':
-    case 'creator':
-      return STRIPE_PRICE_CREATOR_MONTHLY;
-
-    case 'pro-studio':
-    case 'pro_studio':
-    case 'studio':
-    case 'pro':
-      return STRIPE_PRICE_PRO_STUDIO;
-
-    default:
-      return null;
-  }
+if (!STRIPE_SECRET_KEY) {
+  console.warn('⚠️  STRIPE_SECRET_KEY is not set. Stripe checkout will fail.');
 }
+
+const stripe = STRIPE_SECRET_KEY ? Stripe(STRIPE_SECRET_KEY) : null;
+
+// Resolve starter price from either env name
+const STARTER_PRICE_ID = STRIPE_PRICE_STARTER_CREDITS || STRIPE_PRICE_STARTER;
+console.log('Stripe starter price (resolved):', STARTER_PRICE_ID);
+
+// ------------------ BASIC APP SETUP ------------------
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files (your front-end) from /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', env: NODE_ENV });
+});
+
+// Helper to compute base URL (works locally + on Render)
+function getBaseUrl(req) {
+  if (APP_BASE_URL) return APP_BASE_URL;
+  const proto = req.headers['x-forwarded-proto'] || req.protocol;
+  return `${proto}://${req.get('host')}`;
+}
+
+// ------------------ STRIPE PLANS CONFIG ------------------
+
+const STRIPE_PLANS = {
+  starter: {
+    name: 'Starter Credits',
+    mode: 'payment',                    // 🔒 FORCE ONE-TIME
+    get priceId() {
+      return STARTER_PRICE_ID;
+    },
+    priceEnvKey: () =>
+      STARTER_PRICE_ID
+        ? (STRIPE_PRICE_STARTER_CREDITS
+            ? 'STRIPE_PRICE_STARTER_CREDITS'
+            : 'STRIPE_PRICE_STARTER')
+        : 'STRIPE_PRICE_STARTER'
+  },
+
+  'creator-monthly': {
+    name: 'Creator Monthly',
+    mode: 'subscription',               // 🔒 FORCE SUBSCRIPTION
+    get priceId() {
+      return STRIPE_PRICE_CREATOR_MONTHLY;
+    },
+    priceEnvKey: () => 'STRIPE_PRICE_CREATOR_MONTHLY'
+  },
+
+  'pro-studio': {
+    name: 'Pro Studio',
+    mode: 'subscription',               // 🔒 FORCE SUBSCRIPTION
+    get priceId() {
+      return STRIPE_PRICE_PRO_STUDIO;
+    },
+    priceEnvKey: () => 'STRIPE_PRICE_PRO_STUDIO'
+  }
+};
+
+// ------------------ STRIPE CHECKOUT SESSION ------------------
 
 app.post('/api/checkout/stripe/session', async (req, res) => {
   try {
-    if (!stripe) return res.status(500).json({ error: 'Stripe not configured.' });
+    const plan = (req.query.plan || req.body.plan || '').toLowerCase();
 
-    const planParam = req.query.plan || 'starter';
-    const price = stripePriceForPlan(planParam);
+    console.log('Stripe checkout requested for plan:', plan);
 
-    if (!price) {
-      console.warn('Stripe checkout called with unknown or unconfigured plan:', planParam);
-      return res.status(400).json({ error: `Unknown plan: ${planParam}` });
+    const config = STRIPE_PLANS[plan];
+    if (!config) {
+      console.error('❌ Unknown Stripe plan:', plan);
+      return res.status(400).json({ error: 'Unknown plan' });
     }
 
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription', // or 'payment' for one-time credits
-      line_items: [{ price, quantity: 1 }],
-      allow_promotion_codes: true,
-      automatic_tax: { enabled: true },
-      payment_method_types: ['card', 'link', 'cashapp'],
-      success_url: `${PUBLIC_BASE_URL}/?status=success&provider=stripe`,
-      cancel_url: `${PUBLIC_BASE_URL}/?status=cancel&provider=stripe`
+    const priceId = config.priceId;
+    if (!priceId) {
+      const keyName = config.priceEnvKey();
+      console.error(
+        `❌ Missing price ID for plan "${plan}". Check env var ${keyName}`
+      );
+      return res.status(500).json({
+        error: `Server misconfigured for plan "${plan}". Missing ${keyName}.`
+      });
+    }
+
+    if (!stripe) {
+      return res.status(500).json({ error: 'Stripe is not configured' });
+    }
+
+    const mode = config.mode; // strictly from STRIPE_PLANS
+
+    const baseUrl = getBaseUrl(req);
+
+    const sessionParams = {
+      mode,
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1
+        }
+      ],
+      // Explicitly disable automatic tax to avoid "valid origin address" errors
+      automatic_tax: { enabled: false },
+      success_url: `${baseUrl}/pricing?status=success&plan=${encodeURIComponent(
+        plan
+      )}`,
+      cancel_url: `${baseUrl}/pricing?status=cancel&plan=${encodeURIComponent(
+        plan
+      )}`,
+      metadata: {
+        plan,
+        source: 'pulsemotionhub'
+      }
+    };
+
+    console.log(
+      'Creating Stripe session with params:',
+      JSON.stringify(
+        { mode: sessionParams.mode, line_items: sessionParams.line_items },
+        null,
+        2
+      )
+    );
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
+
+    console.log(
+      '✅ Stripe session created:',
+      session.id,
+      'for plan:',
+      plan,
+      'mode:',
+      mode
+    );
+
+    res.json({ id: session.id, url: session.url });
+  } catch (err) {
+    console.error(
+      '❌ Stripe session error:',
+      err.type || '',
+      err.message
+    );
+    res.status(500).json({
+      error: 'Stripe checkout failed',
+      details: err.message
     });
-
-    res.json({ url: session.url });
-  } catch (err) {
-    console.error('Stripe session error:', err);
-    res.status(500).json({ error: err.message });
   }
 });
 
-app.post('/webhooks/stripe', bodyParser.raw({ type: 'application/json' }), (req, res) => {
-  if (!STRIPE_WEBHOOK_SECRET || !stripe) return res.sendStatus(200);
-  let event;
-  try {
-    const sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error('Stripe webhook signature verification failed:', err.message);
-    return res.sendStatus(400);
-  }
+// ------------------ PAYPAL HELPERS ------------------
 
-  switch (event.type) {
-    case 'checkout.session.completed':
-      console.log('✅ Stripe checkout completed:', event.data.object.id);
-      break;
-    case 'invoice.payment_succeeded':
-      console.log('💰 Stripe invoice paid:', event.data.object.id);
-      break;
-    default:
-      console.log(`Unhandled Stripe event: ${event.type}`);
-  }
-  res.json({ received: true });
-});
-
-// ---------- PAYPAL CHECKOUT ----------
-function paypalBase() {
-  return PAYPAL_ENV === 'sandbox'
-    ? 'https://api-m.sandbox.paypal.com'
-    : 'https://api-m.paypal.com';
-}
-
+// Node 18+ has global fetch; if not, you could import 'node-fetch'
 async function getPayPalAccessToken() {
-  const resp = await fetch(`${paypalBase()}/v1/oauth2/token`, {
+  const base =
+    PAYPAL_ENV === 'live'
+      ? 'https://api-m.paypal.com'
+      : 'https://api-m.sandbox.paypal.com';
+
+  const auth = Buffer.from(
+    `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
+  ).toString('base64');
+
+  const response = await fetch(`${base}/v1/oauth2/token`, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64'),
+      Authorization: `Basic ${auth}`,
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: 'grant_type=client_credentials'
   });
-  if (!resp.ok) {
-    const text = await resp.text();
-    console.error('PayPal auth failed:', resp.status, text);
-    throw new Error('PayPal auth failed');
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`PayPal token error: ${response.status} ${text}`);
   }
-  return resp.json();
+
+  const data = await response.json();
+  return { accessToken: data.access_token, baseUrl: base };
 }
 
-// Same aliases as Stripe, but returns amount + description
-function planAmount(rawPlan) {
-  const plan = (rawPlan || '').toLowerCase().trim();
-  console.log('PayPal/crypto checkout requested for plan:', plan);
+// ------------------ PAYPAL CHECKOUT (CREDITS / PLANS) ------------------
 
-  switch (plan) {
-    case 'starter':
-    case 'starter-credits':
-    case 'starter_credit':
-    case 'credits':
-      return { value: '9.99', currency: 'USD', name: 'Starter Credits' };
-
-    case 'creator-monthly':
-    case 'creator_monthly':
-    case 'creator':
-      return { value: '19.99', currency: 'USD', name: 'Creator Monthly (1 mo)' };
-
-    case 'pro-studio':
-    case 'pro_studio':
-    case 'studio':
-    case 'pro':
-      return { value: '39.99', currency: 'USD', name: 'Pro Studio' };
-
-    default:
-      return null;
-  }
-}
-
-app.post('/api/checkout/paypal/create', async (req, res) => {
+app.post('/api/checkout/paypal/create-order', async (req, res) => {
   try {
-    if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET)
-      return res.status(500).json({ error: 'PayPal not configured.' });
+    const { plan } = req.body;
 
-    const planParam = req.query.plan || 'starter';
-    const planInfo = planAmount(planParam);
+    console.log('PayPal/crypto checkout requested for plan:', plan);
 
-    if (!planInfo) {
-      console.warn('PayPal checkout called with unknown plan:', planParam);
-      return res.status(400).json({ error: `Unknown plan: ${planParam}` });
+    const config = STRIPE_PLANS[plan]; // reuse names for consistency
+    if (!config) {
+      return res.status(400).json({ error: 'Unknown plan' });
     }
 
-    const { value, currency, name } = planInfo;
-    const { access_token } = await getPayPalAccessToken();
+    // For now we just hard-code amounts matching your Stripe prices
+    let value = '9.99';
+    if (plan === 'creator-monthly') value = '19.99';
+    if (plan === 'pro-studio') value = '39.99';
 
-    const orderResp = await fetch(`${paypalBase()}/v2/checkout/orders`, {
+    const { accessToken, baseUrl } = await getPayPalAccessToken();
+
+    const orderRes = await fetch(`${baseUrl}/v2/checkout/orders`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${access_token}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         intent: 'CAPTURE',
-        purchase_units: [{
-          amount: { currency_code: currency, value },
-          description: name
-        }],
+        purchase_units: [
+          {
+            amount: {
+              currency_code: 'USD',
+              value
+            },
+            custom_id: plan
+          }
+        ],
         application_context: {
           brand_name: 'PulseMotionHub',
+          landing_page: 'NO_PREFERENCE',
           user_action: 'PAY_NOW',
-          return_url: `${PUBLIC_BASE_URL}/?status=success&provider=paypal`,
-          cancel_url: `${PUBLIC_BASE_URL}/?status=cancel&provider=paypal`
+          return_url: `${getBaseUrl(
+            req
+          )}/pricing?status=success&provider=paypal&plan=${encodeURIComponent(
+            plan
+          )}`,
+          cancel_url: `${getBaseUrl(
+            req
+          )}/pricing?status=cancel&provider=paypal&plan=${encodeURIComponent(
+            plan
+          )}`
         }
       })
     });
 
-    const data = await orderResp.json();
-    if (!orderResp.ok) {
-      console.error('Failed to create PayPal order:', orderResp.status, data);
-      return res.status(500).json({
-        error: 'Failed to create PayPal order.',
-        details: data
-      });
+    if (!orderRes.ok) {
+      const text = await orderRes.text();
+      throw new Error(`PayPal order error: ${orderRes.status} ${text}`);
     }
 
-    const approval = (data.links || []).find(l => l.rel === 'approve');
-    res.json({ orderId: data.id, approvalUrl: approval?.href });
+    const order = await orderRes.json();
+    console.log('✅ PayPal order created:', order.id, 'for plan:', plan);
+
+    res.json(order);
   } catch (err) {
-    console.error('PayPal error:', err);
-    res.status(500).json({ error: err.message });
+    console.error('❌ PayPal create-order error:', err.message);
+    res.status(500).json({
+      error: 'PayPal checkout failed',
+      details: err.message
+    });
   }
 });
 
-app.post('/api/checkout/paypal/capture/:orderId', async (req, res) => {
+// Capture PayPal order
+app.post('/api/checkout/paypal/capture-order', async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const { access_token } = await getPayPalAccessToken();
-    const resp = await fetch(`${paypalBase()}/v2/checkout/orders/${orderId}/capture`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${access_token}` }
-    });
-    const data = await resp.json();
-    if (!resp.ok) {
-      console.error('PayPal capture failed:', resp.status, data);
-      return res.status(500).json({ error: 'Capture failed', details: data });
-    }
-    res.json({ status: 'captured', data });
-  } catch (e) {
-    console.error('PayPal capture error:', e);
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// ---------- COINBASE COMMERCE CHECKOUT ----------
-app.post('/api/checkout/coinbase/charge', async (req, res) => {
-  try {
-    if (!COINBASE_COMMERCE_API_KEY)
-      return res.status(500).json({ error: 'Coinbase Commerce not configured.' });
-
-    const planParam = req.query.plan || 'starter';
-    const planInfo = planAmount(planParam);
-
-    if (!planInfo) {
-      console.warn('Coinbase checkout called with unknown plan:', planParam);
-      return res.status(400).json({ error: `Unknown plan: ${planParam}` });
+    const { orderId } = req.body;
+    if (!orderId) {
+      return res.status(400).json({ error: 'Missing orderId' });
     }
 
-    const { value, currency, name } = planInfo;
+    const { accessToken, baseUrl } = await getPayPalAccessToken();
 
-    const chargeResp = await fetch('https://api.commerce.coinbase.com/charges', {
-      method: 'POST',
-      headers: {
-        'X-CC-Api-Key': COINBASE_COMMERCE_API_KEY,
-        'X-CC-Version': '2018-03-22',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name,
-        description: `PulseMotionHub - ${name}`,
-        pricing_type: 'fixed_price',
-        local_price: { amount: value, currency },
-        redirect_url: `${PUBLIC_BASE_URL}/?status=success&provider=coinbase`,
-        cancel_url: `${PUBLIC_BASE_URL}/?status=cancel&provider=coinbase`
-      })
-    });
+    const captureRes = await fetch(
+      `${baseUrl}/v2/checkout/orders/${orderId}/capture`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
 
-    const data = await chargeResp.json();
-    if (!chargeResp.ok) {
-      console.error('Failed to create crypto charge:', chargeResp.status, data);
-      return res.status(500).json({ error: 'Failed to create crypto charge.', details: data });
+    if (!captureRes.ok) {
+      const text = await captureRes.text();
+      throw new Error(`PayPal capture error: ${captureRes.status} ${text}`);
     }
-    res.json({ hosted_url: data?.data?.hosted_url, charge_code: data?.data?.code });
+
+    const data = await captureRes.json();
+    console.log('✅ PayPal order captured:', orderId);
+    res.json(data);
   } catch (err) {
-    console.error('Coinbase error:', err);
-    res.status(500).json({ error: err.message });
+    console.error('❌ PayPal capture-order error:', err.message);
+    res.status(500).json({
+      error: 'PayPal capture failed',
+      details: err.message
+    });
   }
 });
 
-app.post('/webhooks/coinbase', bodyParser.raw({ type: 'application/json' }), (req, res) => {
-  try {
-    if (!COINBASE_WEBHOOK_SECRET) return res.sendStatus(200);
-    const signature = req.headers['x-cc-webhook-signature'];
-    const hmac = crypto.createHmac('sha256', COINBASE_WEBHOOK_SECRET);
-    const computed = hmac.update(req.body).digest('hex');
-    if (signature !== computed) {
-      console.error('Coinbase signature mismatch');
-      return res.sendStatus(400);
-    }
-    const event = JSON.parse(req.body.toString());
-    console.log('Coinbase event:', event.type);
-    res.json({ received: true });
-  } catch (e) {
-    console.error('Coinbase webhook error:', e);
-    res.sendStatus(400);
-  }
-});
+// ------------------ CATCH-ALL: FRONTEND ------------------
 
-// ---------- SERVE FRONTEND ----------
+// If you use a single-page app front-end:
 app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api') && !req.path.startsWith('/webhooks')) {
-    return res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  }
-  return res.status(404).json({ error: 'Not found' });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ---------- START SERVER ----------
-app.listen(PORT, '0.0.0.0', () => {
+// ------------------ START SERVER ------------------
+
+app.listen(PORT, () => {
   console.log(`✅ PulseMotionHub server listening on ${PORT} (${NODE_ENV})`);
-  console.log('Stripe starter price (resolved):', PRICE_STARTER || '(not set)');
 });
