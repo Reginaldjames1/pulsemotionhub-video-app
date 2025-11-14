@@ -1,16 +1,7 @@
 {
-  "name": "pulsemotionhub",
-  "version": "1.0.0",
-  {
   "name": "pulsemotionhub-video-app",
   "version": "1.0.0",
   "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js"
-  },
-  ...
-}
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js"
@@ -21,7 +12,8 @@
     "dotenv": "^17.2.3",
     "express": "^4.19.2",
     "node-fetch": "^3.3.2",
-    "stripe": "^16.6.0"
+    "stripe": "^16.9.0"
   }
 }
+
 
