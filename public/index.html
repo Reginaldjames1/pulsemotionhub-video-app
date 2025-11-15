@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PulseMotionHub – Image to Video in Seconds</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Turn images into cinematic video clips in seconds. Built for creators, marketers, and studios."
+  />
+  <link rel="icon" href="https://fav.farm/⚡" />
+  <style>
+    :root {
+      --bg: #050812;
+      --bg-alt: #060917;
+      --card: #0b1020;
+      --card-alt: #10162a;
+      --accent: #4b6bff;
+      --accent-soft: rgba(75, 107, 255, 0.24);
+      --accent-2: #ff4bb8;
+      --text: #f7f8ff;
+      --muted: #a2a9c4;
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --danger: #ff4b6a;
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.55);
+      --shadow-glow: 0 0 40px rgba(75, 107, 255, 0.55);
+      --nav-height: 70px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #141a33 0, #050812 35%),
+        radial-gradient(circle at bottom right, #1c1335 0, #050812 40%);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+    }
+
+    img,
+    video {
+      max-width: 100%;
+      display: block;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ---------- NAV ---------- */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 8, 18, 0.96),
+        rgba(5, 8, 18, 0.8),
+        transparent
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      gap: 16px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 20% 0, #ffe082 0, #ff4bb8 35%, #4b6bff 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+      font-size: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      padding: 6px 0;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.16s ease-out;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-color: transparent;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .pill-chip {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #7cffcb;
+      box-shadow: 0 0 10px rgba(124, 255, 203, 0.8);
+    }
+
+    /* ---------- HERO ---------- */
+
+    main {
+      padding-top: 32px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 44px);
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(120deg, #7cffcb, #4b6bff, #ff4bb8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 430px;
+    }
+
+    .hero-cta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hero-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-note span {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      color: #7cffcb;
+    }
+
+    .hero-preview {
+      background: radial-gradient(circle at 0 0, rgba(124, 255, 203, 0.18) 0, transparent 45%),
+        radial-gradient(circle at 90% 0, rgba(75, 107, 255, 0.2) 0, transparent 50%),
+        radial-gradient(circle at 20% 100%, rgba(255, 75, 184, 0.16) 0, transparent 45%),
+        #060918;
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(5, 8, 18, 0.6);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-video-frame {
+      margin-top: 32px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+    }
+
+    .hero-video-frame img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+
+    .hero-video-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(5, 8, 18, 0.8);
+      font-size: 11px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-video-badge span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4bff93;
+      box-shadow: 0 0 12px rgba(75, 255, 147, 0.9);
+    }
+
+    /* ---------- GENERATOR ---------- */
+
+    section {
+      margin-top: 56px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-title-row h2 {
+      font-size: 22px;
+    }
+
+    .section-title-row p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 380px;
+    }
+
+    .gen-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, var(--card), var(--card-alt));
+      border-radius: var(--radius-xl);
+      padding: 18px 18px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .card-header h3 {
+      font-size: 16px;
+    }
+
+    .card-header span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .text-input,
+    .select-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(4, 7, 16, 0.9);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .text-input:focus,
+    .select-input:focus {
+      border-color: rgba(75, 107, 255, 0.9);
+      box-shadow: 0 0 0 1px rgba(75, 107, 255, 0.6);
+    }
+
+    textarea.text-input {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+      gap: 14px;
+    }
+
+    .input-hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .file-input {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .gen-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .gen-status {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .gen-result-inner {
+      border-radius: 16px;
+      border: 1px dashed rgba(255, 255, 255, 0.16);
+      padding: 14px;
+      min-height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      background: radial-gradient(
+          circle at 20% 0,
+          rgba(124, 255, 203, 0.1),
+          transparent 55%
+        ),
+        rgba(5, 8, 18, 0.8);
+    }
+
+    .gen-result-inner video {
+      width: 100%;
+      border-radius: 12px;
+      background: black;
+    }
+
+    /* ---------- PRICING ---------- */
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .price-card {
+      position: relative;
+      border-radius: var(--radius-xl);
+      padding: 18px 18px 16px;
+      background: linear-gradient(150deg, var(--card), #090f21);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .price-card--popular {
+      border-color: rgba(75, 107, 255, 0.9);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .price-badge {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(75, 107, 255, 0.15);
+      color: #d6deff;
+      border: 1px solid rgba(75, 107, 255, 0.7);
+    }
+
+    .price-title {
+      font-size: 16px;
+    }
+
+    .price-amount {
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .price-amount span {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .price-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .price-list {
+      list-style: none;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .price-list li::before {
+      content: "•";
+      margin-right: 6px;
+      color: #7cffcb;
+    }
+
+    .price-buttons {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .btn-wide {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-provider {
+      font-size: 13px;
+    }
+
+    .payments-note {
+      margin-top: 22px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ---------- FAQ ---------- */
+
+    .faq-list {
+      margin-top: 16px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(150deg, var(--card), var(--card-alt));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .faq-item + .faq-item {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .faq-header {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .faq-question {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .faq-toggle {
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .faq-body {
+      padding: 0 18px 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .faq-item.open .faq-body {
+      padding-bottom: 14px;
+      max-height: 160px;
+    }
+
+    footer {
+      padding: 22px 0 0;
+      margin-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    footer a {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ---------- TOAST ---------- */
+
+    .toast {
+      position: fixed;
+      top: calc(var(--nav-height) + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      min-width: 260px;
+      max-width: 90vw;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(12, 15, 35, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-badge {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .toast-error .toast-badge {
+      background: rgba(255, 75, 106, 0.16);
+      color: var(--danger);
+    }
+
+    .toast-success .toast-badge {
+      background: rgba(124, 255, 203, 0.16);
+      color: #7cffcb;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 880px) {
+      .hero,
+      .gen-grid,
+      .pricing-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero {
+        margin-top: 24px;
+      }
+      .hero-preview {
+        order: -1;
+      }
+      .nav-links {
+        display: none;
+      }
+      .shell {
+        padding-bottom: 64px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card,
+      .price-card {
+        border-radius: 18px;
+      }
+      .gen-grid {
+        gap: 18px;
+      }
+      .field-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-video-frame img {
+        height: 210px;
+      }
+      .nav {
+        padding-inline: 14px;
+      }
+      .shell {
+        padding-inline: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Toast -->
+  <div class="toast" data-toast>
+    <div class="toast-badge">!</div>
+    <span data-toast-text>Something happened.</span>
+  </div>
+
+  <!-- NAV -->
+  <header>
+    <nav class="nav">
+      <div class="nav-left">
+        <div class="nav-logo">⚡</div>
+        <span>PULSE&nbsp;MOTION&nbsp;HUB</span>
+      </div>
+      <div class="nav-links">
+        <a href="#generator">Generator</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="nav-cta">
+        <button class="btn btn-outline" data-scroll="#generator">Try generator</button>
+        <button class="btn btn-primary" data-scroll="#pricing">Get credits</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div>
+        <div class="pill-chip">
+          <span class="pill-dot"></span>
+          Image ➜ Video in seconds
+        </div>
+        <h1>
+          Turn images into <span>Cinematic Videos</span> with one prompt.
+        </h1>
+        <p class="hero-copy">
+          Upload an image or paste a URL, describe the motion, and PulseMotionHub
+          will render a short clip you can share with clients, socials, or ads.
+        </p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-scroll="#generator">
+            Try the generator
+          </button>
+          <button class="btn btn-outline" data-scroll="#pricing">
+            See payment options
+          </button>
+        </div>
+        <div class="hero-note">
+          <span>✓</span>
+          Commercial use allowed when your prompts follow provider policies.
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="hero-tag">Preview • Big Buck Bunny snippet</div>
+        <div class="hero-video-frame">
+          <img
+            src="https://www.w3schools.com/html/pic_trulli.jpg"
+            alt="Cinematic video preview"
+          />
+          <div class="hero-video-badge">
+            <span></span>
+            Sample 5s motion clip
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GENERATOR -->
+    <section id="generator">
+      <div class="section-label">1) Source &amp; Motion</div>
+      <div class="section-title-row">
+        <h2>Your image, your motion.</h2>
+        <p>
+          Start with any still image, then describe how you want it to move.
+          When you’re happy with the result, you can top up credits to export in
+          higher quality.
+        </p>
+      </div>
+
+      <div class="gen-grid">
+        <!-- Left: form -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Image &amp; Motion</h3>
+              <span>Works with URLs or uploads.</span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div>
+              <label class="field-label" for="imageUrl">Image URL (optional)</label>
+              <input
+                id="imageUrl"
+                class="text-input"
+                placeholder="https://example.com/your-image.jpg"
+              />
+              <p class="input-hint">
+                If you don’t paste a URL, you can upload a file instead.
+              </p>
+            </div>
+            <div>
+              <label class="field-label" for="imageFile">Upload image</label>
+              <input
+                id="imageFile"
+                type="file"
+                accept="image/*"
+                class="file-input"
+              />
+              <p class="input-hint">
+                JPG, PNG or WEBP, up to ~5&nbsp;MB is ideal for now.
+              </p>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px">
+            <label class="field-label" for="prompt">Describe the motion</label>
+            <textarea
+              id="prompt"
+              class="text-input"
+              placeholder="Example: Slowly dolly in, wind in the trees, subtle camera shake..."
+            ></textarea>
+          </div>
+
+          <div style="margin-top: 12px">
+            <label class="field-label" for="duration">Duration</label>
+            <select id="duration" class="select-input">
+              <option value="4">~4 seconds</option>
+              <option value="6">~6 seconds</option>
+              <option value="8">~8 seconds</option>
+            </select>
+          </div>
+
+          <div class="gen-actions">
+            <button class="btn btn-primary" id="generateBtn">
+              Generate preview
+            </button>
+            <div class="gen-status" id="genStatus">
+              Ready. Using demo video until providers are plugged in.
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: result -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Result</h3>
+              <span>Your video will appear here after processing.</span>
+            </div>
+          </div>
+          <div class="gen-result-inner" id="genResult">
+            Drop an image and prompt on the left, then click
+            <strong>&ldquo;Generate preview&rdquo;</strong>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing">
+      <div class="section-label">2) Plans &amp; Credits</div>
+      <div class="section-title-row">
+        <h2>Only pay for what you actually render.</h2>
+        <p>
+          Start with one-off credits, or switch to a monthly plan when you’re
+          running regular client work or campaigns.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Starter -->
+        <article class="price-card">
+          <h3 class="price-title">Starter Credits</h3>
+          <div class="price-amount">$9.99 <span>one-time</span></div>
+          <p class="price-sub">
+            Perfect for trying the platform or small batches of videos.
+          </p>
+          <ul class="price-list">
+            <li>Pay once, use anytime</li>
+            <li>Great for small clips &amp; tests</li>
+            <li>Email support</li>
+          </ul>
+          <div class="price-buttons">
+            <button
+              class="btn btn-primary btn-wide btn-provider"
+              data-checkout
+              data-provider="stripe"
+              data-plan="starter"
+            >
+              Card / Apple Pay (Stripe)
+            </button>
+            <button
+              class="btn btn-outline btn-wide btn-provider"
+              data-checkout
+              data-provider="paypal"
+              data-plan="starter"
+            >
+              Pay with PayPal
+            </button>
+          </div>
+        </article>
+
+        <!-- Creator Monthly -->
+        <article class="price-card price-card--popular">
+          <div class="price-badge">Most popular</div>
+          <h3 class="price-title">Creator Monthly</h3>
+          <div class="price-amount">$19.99 <span>/mo</span></div>
+          <p class="price-sub">
+            For active creators &amp; marketers shipping new videos every week.
+          </p>
+          <ul class="price-list">
+            <li>Automatically renews every month</li>
+            <li>Priority generation queue</li>
+            <li>Email + priority chat support</li>
+          </ul>
+          <div class="price-buttons">
+            <button
+              class="btn btn-primary btn-wide btn-provider"
+              data-checkout
+              data-provider="stripe"
+              data-plan="creator-monthly"
+            >
+              Card / Apple Pay (Stripe)
+            </button>
+            <button
+              class="btn btn-outline btn-wide btn-provider"
+              data-checkout
+              data-provider="paypal"
+              data-plan="creator-monthly"
+            >
+              Pay with PayPal
+            </button>
+          </div>
+        </article>
+
+        <!-- Pro Studio -->
+        <article class="price-card">
+          <h3 class="price-title">Pro Studio</h3>
+          <div class="price-amount">$39.99 <span>/mo</span></div>
+          <p class="price-sub">
+            Best for agencies &amp; teams running multiple client projects.
+          </p>
+          <ul class="price-list">
+            <li>Higher limits &amp; advanced usage</li>
+            <li>Team-friendly workflows</li>
+            <li>Priority support &amp; onboarding</li>
+          </ul>
+          <div class="price-buttons">
+            <button
+              class="btn btn-primary btn-wide btn-provider"
+              data-checkout
+              data-provider="stripe"
+              data-plan="pro-studio"
+            >
+              Card / Apple Pay (Stripe)
+            </button>
+            <button
+              class="btn btn-outline btn-wide btn-provider"
+              data-checkout
+              data-provider="paypal"
+              data-plan="pro-studio"
+            >
+              Pay with PayPal
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <p class="payments-note">
+        <strong>Payment Methods.</strong> We use trusted providers so your card
+        details stay safe. Stripe powers card, Apple&nbsp;Pay, and Cash&nbsp;App;
+        PayPal is available for customers who prefer a wallet checkout.
+      </p>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="section-label">3) FAQ</div>
+      <div class="section-title-row">
+        <h2>Frequently Asked Questions</h2>
+        <p>
+          A quick overview of what you can do with PulseMotionHub and how
+          billing works for image-to-video generation.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <div class="faq-header">
+            <div class="faq-question">Can I use the videos commercially?</div>
+            <div class="faq-toggle">−</div>
+          </div>
+          <div class="faq-body">
+            Yes – as long as your prompts follow the content policies of the
+            underlying AI providers, you can use generated clips for client
+            work, social media, ads, and more.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">How long does a generation take?</div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-body">
+            Most clips are ready in under a minute, depending on queue and
+            provider load. We show progress, and you can continue browsing while
+            the render completes.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">
+              Will you add more models &amp; providers?
+            </div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-body">
+            Yes. PulseMotionHub is designed so we can plug in new AI video
+            providers over time while keeping the same simple workflow for you.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2025 PulseMotionHub. All rights reserved.</span>
+      <span>
+        <a href="#generator">Generator</a> ·
+        <a href="#pricing">Pricing</a>
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    // --------- SMALL UTILITIES ---------
+    const toastEl = document.querySelector("[data-toast]");
+    const toastTextEl = document.querySelector("[data-toast-text]");
+
+    function showToast(message, type = "error", timeout = 4500) {
+      if (!toastEl) return;
+      toastTextEl.textContent = message;
+      toastEl.classList.remove("toast-error", "toast-success");
+      toastEl.classList.add(
+        "toast",
+        type === "error" ? "toast-error" : "toast-success",
+        "show"
+      );
+      const badge = toastEl.querySelector(".toast-badge");
+      if (badge) badge.textContent = type === "error" ? "!" : "✓";
+
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, timeout);
+    }
+
+    // Smooth scroll for nav buttons
+    document.querySelectorAll("[data-scroll]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = document.querySelector(btn.dataset.scroll);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // --------- GENERATOR ---------
+    const generateBtn = document.getElementById("generateBtn");
+    const genStatus = document.getElementById("genStatus");
+    const genResult = document.getElementById("genResult");
+
+    async function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    generateBtn?.addEventListener("click", async () => {
+      const prompt = document.getElementById("prompt").value.trim();
+      const imageUrl = document.getElementById("imageUrl").value.trim();
+      const fileInput = document.getElementById("imageFile");
+      const duration = Number(document.getElementById("duration").value || 4);
+
+      if (!prompt) {
+        showToast("Add a short description of the motion first.");
+        return;
+      }
+      if (!imageUrl && (!fileInput.files || fileInput.files.length === 0)) {
+        showToast("Paste an image URL or upload a file to get started.");
+        return;
+      }
+
+      let imageBase64 = null;
+      if (!imageUrl && fileInput.files[0]) {
+        const dataUrl = await readFileAsDataUrl(fileInput.files[0]);
+        imageBase64 = dataUrl.split(",")[1]; // strip "data:…;base64,"
+      }
+
+      genStatus.textContent = "Generating demo clip…";
+      generateBtn.disabled = true;
+
+      try {
+        const resp = await fetch("/api/generate-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt,
+            imageUrl: imageUrl || undefined,
+            image: imageBase64 || undefined,
+            duration,
+          }),
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.videoUrl) {
+          console.error("Generate error:", data);
+          showToast(data.error || "Video generation failed. Try again in a moment.");
+          genStatus.textContent = "Something went wrong. Try again.";
+          return;
+        }
+
+        genStatus.textContent = "Preview ready. This uses a placeholder demo video for now.";
+        genResult.innerHTML = "";
+        const video = document.createElement("video");
+        video.controls = true;
+        video.autoplay = true;
+        video.loop = true;
+        const source = document.createElement("source");
+        source.src = data.videoUrl;
+        source.type = data.contentType || "video/mp4";
+        video.appendChild(source);
+        genResult.appendChild(video);
+      } catch (err) {
+        console.error(err);
+        showToast("Network error while generating video.");
+        genStatus.textContent = "Network error. Please try again.";
+      } finally {
+        generateBtn.disabled = false;
+      }
+    });
+
+    // --------- PAYMENTS: STRIPE ---------
+    async function startStripeCheckout(plan) {
+      try {
+        const resp = await fetch(
+          `/api/checkout/stripe/session?plan=${encodeURIComponent(plan)}`,
+          { method: "POST" }
+        );
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok || !data.url) {
+          console.error("Stripe error:", data);
+          showToast(data.error || "Stripe checkout failed.");
+          return;
+        }
+        window.location.href = data.url;
+      } catch (err) {
+        console.error(err);
+        showToast("Network error starting Stripe checkout.");
+      }
+    }
+
+    // --------- PAYMENTS: PAYPAL ---------
+    async function startPaypalCheckout(plan) {
+      try {
+        const resp = await fetch("/api/checkout/paypal/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan }),
+        });
+
+        const data = await resp.json().catch(() => ({}));
+
+        if (!resp.ok) {
+          console.error("PayPal error (HTTP):", data);
+          showToast(data.error || "Failed to create PayPal order.");
+          return;
+        }
+
+        // PayPal returns HATEOAS links; we need the "approve" link
+        const approveLink =
+          (data.links || []).find((l) => l.rel === "approve") || null;
+
+        if (!approveLink || !approveLink.href) {
+          console.error("PayPal error: no approval link in response:", data);
+          showToast("PayPal did not return an approval URL.");
+          return;
+        }
+
+        // Redirect user to PayPal checkout
+        window.location.href = approveLink.href;
+      } catch (err) {
+        console.error("PayPal network error:", err);
+        showToast("Network error starting PayPal checkout.");
+      }
+    }
+
+    // Attach click handlers for all checkout buttons
+    document.querySelectorAll("[data-checkout]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const provider = btn.dataset.provider;
+        const plan = btn.dataset.plan;
+        if (!plan) {
+          showToast("Missing plan on this button.");
+          return;
+        }
+        if (provider === "stripe") {
+          startStripeCheckout(plan);
+        } else if (provider === "paypal") {
+          startPaypalCheckout(plan);
+        } else {
+          showToast("Unsupported payment provider.");
+        }
+      });
+    });
+
+    // --------- FAQ ACCORDION ---------
+    document.querySelectorAll(".faq-item").forEach((item) => {
+      const header = item.querySelector(".faq-header");
+      header.addEventListener("click", () => {
+        const open = item.classList.contains("open");
+        document.querySelectorAll(".faq-item").forEach((it) =>
+          it.classList.remove("open")
+        );
+        document
+          .querySelectorAll(".faq-toggle")
+          .forEach((t) => (t.textContent = "+"));
+        if (!open) {
+          item.classList.add("open");
+          const toggle = item.querySelector(".faq-toggle");
+          if (toggle) toggle.textContent = "−";
+        }
+      });
+    });
+
+    // --------- STATUS HANDLING FROM QUERY STRING (optional) ---------
+    (function handleStatusFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get("status");
+      const provider = params.get("provider");
+      if (!status) return;
+
+      if (status === "success") {
+        showToast(
+          provider === "paypal"
+            ? "PayPal checkout completed."
+            : "Stripe checkout completed.",
+          "success"
+        );
+      } else if (status === "cancel") {
+        showToast(
+          provider === "paypal"
+            ? "PayPal checkout was cancelled."
+            : "Card checkout was cancelled."
+        );
+      }
+    })();
+  </script>
+</body>
+</html>
